@@ -26,7 +26,8 @@ export default {
     selectType: 'Выберите A тип',
     selectValue: 'Выберите A значение',
     enterValue: 'Введите значение',
-    empty: 'пустой'
+    empty: 'пустой',
+    selectLayer: 'Выберите слой'
   },
   misc: {
     by: '',
@@ -44,7 +45,8 @@ export default {
     building: 'Здания',
     water: 'Вода',
     land: 'Земля',
-    '3dBuilding': '3d здания'
+    '3dBuilding': '3d здания',
+    background: 'Фон'
   },
   panel: {
     text: {
@@ -52,9 +54,12 @@ export default {
       labelWithId: 'Ярлык {labelId}',
       fontSize: 'Размер шрифта',
       fontColor: 'Цвет шрифта',
+      backgroundColor: 'Цвет фона',
       textAnchor: 'Анкор текста',
       alignment: 'Положение',
-      addMoreLabel: 'Добавить еще ярлык'
+      addMoreLabel: 'Добавить еще ярлык',
+      outlineWidth: 'Ширина контура',
+      outlineColor: 'Цвет контура'
     }
   },
   sidebar: {
@@ -63,10 +68,15 @@ export default {
       filter: 'Фильтры',
       interaction: 'Взаимодействия',
       basemap: 'Базовая карта'
+    },
+    panelViewToggle: {
+      list: 'Список',
+      byDataset: 'По набору данных'
     }
   },
   layer: {
     required: 'Требования*',
+    columnModesSeparator: 'Или',
     radius: 'Радиус',
     color: 'Цвет',
     fillColor: 'Цвет заливки',
@@ -77,15 +87,19 @@ export default {
     stroke: 'Обводка',
     strokeWidth: 'Ширина обводки',
     strokeColor: 'Цвет обводки',
-    basic: 'Basic',
-    trailLength: 'Trail Length',
-    trailLengthDescription: 'Number of seconds for a path to completely fade out',
-    newLayer: 'new layer',
-    elevationByDescription: 'When off, height is based on count of points',
-    colorByDescription: 'When off, color is based on count of points',
-    aggregateBy: 'Aggregate {field} by',
-    '3DModel': '3D Model',
-    '3DModelOptions': '3D Model Options',
+    basic: 'Базовый',
+    trailLength: 'Длина следа',
+    trailLengthDescription: 'Кол-во секунд для полного исчезновения пути',
+    newLayer: 'новый слой',
+    elevationByDescription: 'При выключении высота основана на кол-ве точек',
+    colorByDescription: 'При выключении цвет основан на кол-ве точек',
+    aggregateBy: 'Агрегировать {field} по',
+    '3DModel': '3D Модель',
+    '3DModelOptions': 'Параметры 3D модели',
+    service: 'Сервис',
+    layer: 'Слой',
+    appearance: 'Внешний вид',
+    uniqueIdField: 'Поле уникального ID',
     type: {
       point: 'точки',
       arc: 'дуги',
@@ -101,8 +115,17 @@ export default {
       hexagonid: 'H3',
       trip: 'пути',
       s2: 'S2',
-      '3d': '3D'
-    }
+      '3d': '3D',
+      vectortile: 'векторная плитка',
+      rastertile: 'растровая плитка',
+      wms: 'WMS'
+    },
+    wms: {
+      hover: 'Значение:'
+    },
+    layerUpdateError:
+      'Ошибка при обновлении слоя: {errorMessage}. Убедитесь, что формат входных данных корректен.',
+    interaction: 'Взаимодействие'
   },
   layerVisConfigs: {
     angle: 'Угол',
@@ -145,31 +168,62 @@ export default {
     weightIntensity: 'Вес Интенсивность',
     zoomScale: 'Масштаб увеличения',
     heightRange: 'Диапазон высоты',
-    heightMultiplier: 'Множитель высоты'
+    heightMultiplier: 'Множитель высоты',
+    fixedHeight: 'Фиксированная высота',
+    fixedHeightDescription: 'Использовать высоту без изменений',
+    allowHover: 'Разрешить наведение',
+    showNeighborOnHover: 'Выделять соседей при наведении',
+    showHighlightColor: 'Показать цвет выделения',
+    darkModeEnabled: 'Темная базовая карта',
+    transparentBackground: 'Прозрачный фон',
+    billboard: 'Билборд',
+    billboardDescription: 'Ориентировать геометрию к камере',
+    fadeTrail: 'Затухание следа'
   },
   layerManager: {
     addData: 'Добавить данные',
     addLayer: 'Добавить слой',
-    layerBlending: 'Смешивание слоев'
+    layerBlending: 'Смешивание слоев',
+    overlayBlending: 'Смешивание наложений'
   },
   mapManager: {
     mapStyle: 'Стиль карты',
     addMapStyle: 'Добавить стиль карты',
-    '3dBuildingColor': '3D Цвет здания'
+    '3dBuildingColor': '3D Цвет здания',
+    backgroundColor: 'Цвет фона'
+  },
+  effectManager: {
+    effects: 'Эффекты',
+    addEffect: 'Добавить эффект',
+    pickDateTime: 'Выбрать дату/время',
+    currentTime: 'Текущее время',
+    pickCurrrentTime: 'Выбрать текущее время',
+    date: 'Дата',
+    time: 'Время',
+    timezone: 'Часовой пояс'
   },
   layerConfiguration: {
     defaultDescription: 'Рассчитать {property} на основе выбранного поля',
-    howTo: 'How to'
+    howTo: 'Как',
+    showColorChart: 'Показать цветовую схему',
+    hideColorChart: 'Скрыть цветовую схему'
   },
   filterManager: {
-    addFilter: 'Добавить фильтр'
+    addFilter: 'Добавить фильтр',
+    timeFilterSync: 'Синхр. наборы данных',
+    timeLayerSync: 'Связать с таймлайном слоя',
+    timeLayerUnsync: 'Отвязать от таймлайна слоя',
+    column: 'Столбец'
   },
   datasetTitle: {
     showDataTable: 'Показать таблицу данных ',
     removeDataset: 'Удалить набор данных'
   },
   datasetInfo: {
-    rowCount: '{rowCount} строк'
+    rowCount: '{rowCount} строк',
+    vectorTile: 'Векторная плитка',
+    rasterTile: 'Растровая плитка',
+    wmsTile: 'WMS плитка'
   },
   tooltip: {
     hideLayer: 'скрыть слой',
@@ -193,45 +247,62 @@ export default {
     showLayerPanel: 'Показать панель слоев',
     moveToTop: 'Перейти к верхним слоям данных',
     selectBaseMapStyle: 'Выберите стиль базовой карты',
+    removeBaseMapStyle: 'Удалить стиль базовой карты',
     delete: 'Удалить',
     timePlayback: 'Воспроизведение времени',
+    timeFilterSync: 'Синхр. со столбцом из другого набора',
     cloudStorage: 'Облачное хранилище',
     '3DMap': '3D Карта',
     animationByWindow: 'Перемещение временного окна',
-    animationByIncremental: 'Дополнительное временное окно',
+    animationByIncremental: 'Инкрементальное временное окно',
     speed: 'скорость',
     play: 'проиграть',
     pause: 'пауза',
-    reset: 'перезапустить'
+    reset: 'перезапустить',
+    export: 'экспорт',
+    timeLayerSync: 'Связать с таймлайном слоя',
+    timeLayerUnsync: 'Отвязать от таймлайна слоя',
+    syncTimelineStart: 'Начало текущего периода фильтра',
+    syncTimelineEnd: 'Конец текущего периода фильтра',
+    showEffectPanel: 'Показать панель эффектов',
+    hideEffectPanel: 'Скрыть панель эффектов',
+    removeEffect: 'Удалить эффект',
+    disableEffect: 'Отключить эффект',
+    effectSettings: 'Настройки эффекта',
+    zoomToLayer: 'Приблизить к слою',
+    resetAfterError: 'Попытаться включить слой после ошибки'
   },
   toolbar: {
     exportImage: 'Экспорт изображения',
     exportData: 'Экспорт данных',
     exportMap: 'Экспорт карты',
-    shareMapURL: 'Share Map URL',
-    saveMap: 'Сохарнить Карту',
+    shareMapURL: 'Поделиться URL карты',
+    saveMap: 'Сохранить карту',
     select: 'Выбрать',
     polygon: 'Многоугольник',
-    rectangle: 'Квадрат',
+    rectangle: 'Прямоугольник',
     hide: 'Скрыть',
     show: 'Показать',
     ...LOCALES
   },
   editor: {
     filterLayer: 'Слои фильтров',
-    copyGeometry: 'Копировать геометрию'
+    filterLayerDisabled: 'Немногоугольные геометрии нельзя использовать для фильтрации',
+    copyGeometry: 'Копировать геометрию',
+    noLayersToFilter: 'Нет слоев для фильтрации'
   },
 
   modal: {
     title: {
-      deleteDataset: 'Удалить данные',
+      deleteDataset: 'Удалить набор данных',
       addDataToMap: 'Добавить данные на карту',
       exportImage: 'Экспорт изображения',
       exportData: 'Экспорт данных',
       exportMap: 'Экспорт карты',
       addCustomMapboxStyle: 'Добавить собственный стиль карты',
-      saveMap: 'Поделиться Картой',
-      shareURL: 'Поделиться URL'
+      saveMap: 'Сохранить карту',
+      shareURL: 'Поделиться URL',
+      shareMap: 'Поделиться картой'
     },
     button: {
       delete: 'Удалить',
@@ -260,15 +331,16 @@ export default {
       allDatasets: 'Все',
       dataTypeTitle: 'Тип данных',
       dataTypeSubtitle: 'Выберите тип данных, которые вы хотите экспортировать',
-      filterDataTitle: 'Отфильтрованные данные',
+      filterDataTitle: 'Фильтрация данных',
       filterDataSubtitle: 'Вы можете выбрать экспорт исходных данных или отфильтрованных данных',
       filteredData: 'Отфильтрованные данные',
       unfilteredData: 'Нефильтрованные данные',
       fileCount: '{fileCount} Файлов',
-      rowCount: '{rowCount} Строк'
+      rowCount: '{rowCount} Строк',
+      tiledDatasetWarning: '* Экспорт данных для плиточных наборов не поддерживается'
     },
     deleteData: {
-      warning: 'вы собираетесь удалить этот набор данных. Это повлияет на {length} слой'
+      warning: 'вы собираетесь удалить этот набор данных. Это повлияет на {length} слоев'
     },
     addStyle: {
       publishTitle:
@@ -284,13 +356,14 @@ export default {
       exampleToken: 'например pk.abcdefg.xxxxxx',
       pasteTitle: '1. Вставить URL стиля',
       pasteSubtitle0: 'URL стиля может быть mapbox',
-      pasteSubtitle1: 'Или',
+      pasteSubtitle1: 'Что такое',
       pasteSubtitle2: 'URL стиля',
-      pasteSubtitle3: 'style.json используя',
+      pasteSubtitle3: 'или style.json используя',
       pasteSubtitle4: 'Mapbox GL Style Spec',
       namingTitle: '3. Назови свой стиль'
     },
     shareMap: {
+      title: 'Поделиться картой',
       shareUriTitle: 'Поделиться URL карты',
       shareUriSubtitle: 'Создать URL карты, чтобы поделиться с другими',
       cloudTitle: 'Облачное хранилище',
@@ -317,9 +390,8 @@ export default {
         tokenSubtitle: 'Используйте свой токен доступа Mapbox в html(необязательно)',
         tokenPlaceholder: 'Вставьте токен доступа Mapbox',
         tokenMisuseWarning:
-          '* If you do not provide your own token, the map may fail to display at any time when we replace ours to avoid misuse. ',
-        tokenDisclaimer:
-          'Если вы не предоставите свой собственный токен, карта может не отображаться в любое время, когда мы заменяем наш, чтобы избежать неправильного использования.',
+          '* Если вы не предоставите свой токен, карта может не отображаться в любое время, когда мы заменим наш, чтобы избежать неправильного использования. ',
+        tokenDisclaimer: 'Вы можете изменить токен Mapbox позже, следуя инструкциям: ',
         tokenUpdate: 'Как обновить существующий токен карты.',
         modeTitle: 'Режим карты',
         modeSubtitle1: 'Выберите режим приложения. Подробнее',
@@ -344,22 +416,100 @@ export default {
     },
     loadData: {
       upload: 'Загрузить файлы',
+      tileset: 'Плиточный набор',
       storage: 'Загрузить из хранилища'
     },
     tripInfo: {
-      title: 'Как включить анимацию поездки',
-      description1:
-        'Чтобы анимировать путь, данные geoJSON должны содержать LineString в своей геометрии объекта, а координаты в LineString должны иметь 4 элемента в форматах',
-      code: ' [longitude, latitude, altitude, timestamp] ',
-      description2:
-        'с последним элементом, являющимся отметкой времени. Допустимые форматы меток времени включают unix в секундах, например 1564184363, или в миллисекундах, например 1564184363000',
-      example: ',Пример:'
+      title: 'Создать поездки из GeoJson',
+      titleTable: 'Создать поездки из списка точек',
+      description1: `Для анимации пути данные GeoJSON должны содержать \`LineString\` в геометрии объекта, а координаты в LineString должны иметь 4 элемента в форматах
+${'```json'}
+[долгота, широта, высота, метка времени]
+${'```'}
+3-й элемент - это метка времени. Допустимые форматы меток времени включают unix в секундах, например \`1564184363\` или в миллисекундах, например \`1564184363000\`.`,
+      descriptionTable1:
+        'Поездки можно создать, объединив список точек по широте и долготе, отсортировав по меткам времени и сгруппировав по уникальным id.',
+      example: 'Пример GeoJSON',
+      exampleTable: 'Пример Csv'
+    },
+    polygonInfo: {
+      title: 'Создать слой многоугольников из GeoJSON объекта',
+      titleTable: 'Создать путь из точек',
+      description: `Многоугольник можно создать из
+__1 .Коллекция объектов GeoJSON__
+__2. CSV содержит столбец геометрии__
+
+### 1. Создать многоугольник из GeoJSON файла
+
+При загрузке GeoJSON файла, содержащего FeatureCollection, слой многоугольников будет создан автоматически
+
+Пример GeoJSON
+${'```json'}
+{
+  "type": "FeatureCollection",
+  "features": [{
+      "type": "Feature",
+      "geometry": {
+          "type": "Point",
+          "coordinates": [102.0, 0.5]
+      },
+      "properties": {
+          "prop0": "value0"
+      }
+  }, {
+      "type": "Feature",
+      "geometry": {
+          "type": "LineString",
+          "coordinates": [
+              [102.0, 0.0],
+              [103.0, 1.0],
+              [104.0, 0.0],
+              [105.0, 1.0]
+          ]
+      },
+      "properties": {
+        "prop0": "value0"
+      }
+  }]
+}
+${'```'}
+
+### 2. Создать многоугольник из столбца геометрии в CSV таблице
+Геометрии (Многоугольники, Точки, Линии и т.д.) могут быть встроены в CSV как строка в формате \`GeoJSON\` или \`WKT\`.
+
+#### 2.1 Строка \`GeoJSON\`
+Пример data.csv со строкой \`GeoJSON\`
+${'```txt'}
+id,_geojson
+1,"{""type"":""Polygon"",""coordinates"":[[[-74.158491,40.835947],[-74.157914,40.83902]]]}"
+${'```'}
+
+#### 2.2 Строка \`WKT\`
+Пример data.csv со строкой \`WKT\`
+[Well-Known Text (WKT)](https://dev.mysql.com/doc/refman/5.7/en/gis-data-formats.html#gis-wkt-format) представление значений геометрии предназначено для обмена данными геометрии в ASCII формате.
+
+Пример data.csv с WKT
+${'```txt'}
+id,_geojson
+1,"POLYGON((0 0,10 0,10 10,0 10,0 0),(5 5,7 5,7 7,5 7, 5 5))"
+${'```'}
+`,
+      descriptionTable: `Пути можно создать, объединив список точек по широте и долготе, отсортировав по полю индекса (например, метке времени) и сгруппировав по уникальным id.
+
+  ### Столбцы слоя:
+  - **id**: - *обязательно*&nbsp;- Столбец \`id\` используется для группировки точек. Точки с одинаковым id будут объединены в один путь.
+  - **lat**: - *обязательно*&nbsp;- Широта точки
+  - **lon**: - *обязательно*&nbsp;- Долгота точки
+  - **alt**: - *опционально*&nbsp;- Высота точки
+  - **sort by**: - *опционально*&nbsp;- Столбец \`sort by\` используется для сортировки точек, если не указан, точки будут отсортированы по индексу строки.
+`,
+      exampleTable: 'Пример CSV'
     },
     iconInfo: {
       title: 'Как рисовать значки',
       description1:
         'В вашем csv создайте столбец, поместите в него имя значка, который вы хотите нарисовать. Вы можете оставить ячейку пустой, если не хотите, чтобы значок отображался для некоторых точек. Когда столбец назван',
-      code: 'значек',
+      code: 'icon',
       description2: ' kepler.gl автоматически создаст для вас слой значков.',
       example: 'Пример:',
       icons: 'Значки'
@@ -376,7 +526,9 @@ export default {
       back: 'Назад',
       goToPage: 'Перейти на страницу Kepler.gl {displayName}',
       storageMaps: 'Хранилище / Карты',
-      noSavedMaps: 'Нет сохраненных карт'
+      noSavedMaps: 'Нет сохраненных карт',
+      foursquareStorageMessage:
+        'Здесь отображаются только карты, сохраненные через Kepler.gl > Сохранить > Хранилище Foursquare'
     }
   },
   header: {
@@ -395,19 +547,34 @@ export default {
     normal: 'нормальное',
     subtractive: 'вычитание'
   },
+  overlayBlending: {
+    title: 'Смешивание наложений карты',
+    description: 'Смешать слои с базовой картой, чтобы оба были видны.',
+    screen: 'темная базовая карта',
+    normal: 'нормальное',
+    darken: 'светлая базовая карта'
+  },
   columns: {
     title: 'Столбцы',
     lat: 'lat',
-    lng: 'lon',
+    lng: 'lng',
     altitude: 'высота',
-    icon: 'значек',
+    alt: 'высота',
+    id: 'id',
+    timestamp: 'время',
+    icon: 'значок',
     geojson: 'geojson',
+    geoarrow: 'geoarrow',
+    geoarrow0: 'источник geoarrow',
+    geoarrow1: 'цель geoarrow',
     token: 'token',
+    sortBy: 'сортировать по',
+    neighbors: 'соседи',
     arc: {
-      lat0: 'lat источника',
-      lng0: 'lng источника',
-      lat1: 'lat цели',
-      lng1: 'lng цели'
+      lat0: 'широта источника или hex id',
+      lng0: 'долгота источника или hex id',
+      lat1: 'широта цели или hex id',
+      lng1: 'долгота цели или hex id'
     },
     line: {
       alt0: 'высота источника',
@@ -417,20 +584,25 @@ export default {
       worldUnitSize: 'Размер сетки (km)'
     },
     hexagon: {
-      worldUnitSize: 'Hexagon радиус (km)'
+      worldUnitSize: 'Радиус шестиугольника (km)'
     },
     hex_id: 'hex id'
   },
   color: {
-    customPalette: 'Ваша палитра',
-    steps: 'шагов',
-    type: 'тип',
-    reversed: 'перевернуть'
+    customPalette: 'Своя палитра',
+    steps: 'Шаги',
+    type: 'Тип',
+    colorBlindSafe: 'Безопасно для дальтоников',
+    reversed: 'Обратить',
+    disableStepReason: `Нельзя изменить кол-во шагов с пользовательскими цветовыми разрывами, используйте свою палитру для редактирования шагов`,
+    preset: 'Предустановленные цвета',
+    picker: 'Выбор цвета'
   },
   scale: {
     colorScale: 'Цветовая шкала',
     sizeScale: 'Масштаб размера',
     strokeScale: 'Масштаб штриха',
+    strokeColorScale: 'Масштаб цвета штриха',
     scale: 'Масштаб'
   },
   fileUploader: {
@@ -442,13 +614,18 @@ export default {
       'Никакая информация или данные карты не отправляются ни на один сервер.',
     configUploadMessage:
       'Загрузите {fileFormatNames} или сохраненную карту **Json**. Подробнее [**supported file formats**]',
-    browseFiles: 'Просматреть файлы',
+    browseFiles: 'просмотреть файлы',
     uploading: 'Загрузка',
-    fileNotSupported: 'File {errorFiles} is not supported.',
-    or: 'or'
+    fileNotSupported: 'Файл {errorFiles} не поддерживается.',
+    or: 'или'
+  },
+  tilesetSetup: {
+    header: 'Настройка векторных плиток',
+    rasterTileHeader: 'Настройка растровых плиток',
+    addTilesetText: 'Добавить плиточный набор'
   },
   geocoder: {
-    title: 'Введите адрес или координаты, например 37.79, -122.40'
+    title: 'Введите адрес или координаты, например 37.79,-122.40'
   },
   fieldSelector: {
     clearAll: 'Очистить все',
@@ -465,9 +642,31 @@ export default {
   mapPopover: {
     primary: 'Первичный'
   },
-  density: 'density',
+  density: 'плотность',
   'Bug Report': 'Отчет об ошибках',
   'User Guide': 'Инструкции',
   Save: 'Сохранить',
-  Share: 'Поделиться'
+  Share: 'Поделиться',
+  mapLegend: {
+    layers: {
+      line: {
+        singleColor: {
+          sourceColor: 'Источник',
+          targetColor: 'Цель'
+        }
+      },
+      arc: {
+        singleColor: {
+          sourceColor: 'Источник',
+          targetColor: 'Цель'
+        }
+      },
+      default: {
+        singleColor: {
+          color: 'Цвет заливки',
+          strokeColor: 'Контур'
+        }
+      }
+    }
+  }
 };
