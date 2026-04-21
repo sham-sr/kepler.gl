@@ -89,6 +89,8 @@ import {
   FILTER_VIEW_TYPES,
   FPS,
   LIGHT_AND_SHADOW_EFFECT,
+  DISTANCE_FOG_TYPE,
+  SURFACE_FOG_TYPE,
   MAX_DEFAULT_TOOLTIPS,
   PLOT_TYPES,
   SORT_ORDER,
@@ -127,6 +129,7 @@ import {
   FilterAnimationConfig,
   Editor,
   Field,
+  LayerVisConfig,
   TimeRangeFilter
 } from '@kepler.gl/types';
 import {Loader} from '@loaders.gl/loader-utils';
@@ -141,7 +144,12 @@ import {
   sortDatasetByColumn
 } from '@kepler.gl/table';
 import {findFieldsToShow} from './interaction-utils';
-import {calculateLayerData, findDefaultLayer, getLayerOrderFromLayers} from './layer-utils';
+import {
+  calculateLayerData,
+  findDefaultLayer,
+  getLayerOrderFromLayers,
+  mergeLayerVisConfigForNewDatasets
+} from './layer-utils';
 import {getPropValueToMerger, hasPropsToMerge} from './merger-handler';
 import {mergeDatasetsByOrder} from './vis-state-merger';
 import {
@@ -879,7 +887,8 @@ export function setInitialLayerConfig(layer, datasets, layerClasses): Layer {
       ...props[0],
       label: newLayer.config.label,
       dataId: newLayer.config.dataId,
-      isConfigActive: newLayer.config.isConfigActive
+      isConfigActive: newLayer.config.isConfigActive,
+      isVisible: newLayer.config.isVisible
     });
   }
   return typeof newLayer.setInitialLayerConfig === 'function'
@@ -1913,6 +1922,26 @@ export const addEffectUpdater = (
     return state;
   }
 
+  if (
+    action.config?.type === DISTANCE_FOG_TYPE &&
+    state.effects.some(
+      effect => effect.type === DISTANCE_FOG_TYPE || effect.type === SURFACE_FOG_TYPE
+    )
+  ) {
+    Console.warn("Can't add more than one fog effect");
+    return state;
+  }
+
+  if (
+    action.config?.type === SURFACE_FOG_TYPE &&
+    state.effects.some(
+      effect => effect.type === SURFACE_FOG_TYPE || effect.type === DISTANCE_FOG_TYPE
+    )
+  ) {
+    Console.warn("Can't add more than one fog effect");
+    return state;
+  }
+
   const newEffect = createEffect(action.config);
 
   // collapse configurators for other effects
@@ -2485,6 +2514,20 @@ export function applyMergersUpdater(
     : mergeStateResult.mergedState;
 }
 
+/** Reads `options.layerVisConfig` from add-data-to-map (see `AddDataToMapOptions`). */
+function layerVisConfigFromAddDataOptions(
+  options: PostMergerPayload['options'] | undefined
+): Partial<LayerVisConfig> | undefined {
+  if (!options || !('layerVisConfig' in options)) {
+    return undefined;
+  }
+  const patch = (options as {layerVisConfig?: unknown}).layerVisConfig;
+  if (patch == null || typeof patch !== 'object' || Array.isArray(patch)) {
+    return undefined;
+  }
+  return patch as Partial<LayerVisConfig>;
+}
+
 /**
  * Add new dataset to `visState`, with option to load a map config along with the datasets
  */
@@ -2527,6 +2570,12 @@ function postMergeUpdater(mergedState: VisState, postMergerPayload: PostMergerPa
       splitMaps: addNewLayersToSplitMap(mergedState.splitMaps, newLayers)
     };
   }
+
+  mergedState = mergeLayerVisConfigForNewDatasets(
+    mergedState,
+    layerVisConfigFromAddDataOptions(options),
+    newDataIds
+  );
 
   // if no tooltips merged add default tooltips
   newDataIds.forEach(dataId => {

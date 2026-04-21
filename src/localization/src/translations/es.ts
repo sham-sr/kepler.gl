@@ -105,7 +105,9 @@ export default {
       '3d': '3D'
     },
     layerUpdateError:
-      'Se produjo un error durante la actualización de la capa: {errorMessage}. Asegúrese de que el formato de los datos de entrada sea válido.'
+      'Se produjo un error durante la actualización de la capa: {errorMessage}. Asegúrese de que el formato de los datos de entrada sea válido.',
+    heatmap: 'Heatmap',
+    aggregation: 'Aggregation'
   },
   layerVisConfigs: {
     angle: 'Ángulo',
@@ -130,6 +132,7 @@ export default {
     targetColor: 'Color destino',
     colorAggregation: 'Agregación de color',
     heightAggregation: 'Agregación de la altura',
+    weightAggregation: 'Weight Aggregation',
     resolutionRange: 'Rango de resolución',
     sizeScale: 'Medida de escala',
     worldUnitSize: 'Medida de la unidad mundial',
@@ -149,11 +152,16 @@ export default {
     enablePolygonHeight: 'Activar la altura del polígono',
     showWireframe: 'Muestra esquemàtico',
     weightIntensity: 'Intensidad de peso',
+    intensity: 'Intensity',
+    threshold: 'Threshold',
     zoomScale: 'Escala de zoom',
     heightRange: 'Rango de alturas',
     heightMultiplier: 'Multiplicador de altura',
     fixedHeight: 'Altura fija',
-    fixedHeightDescription: 'Usar altura sin modificaciones'
+    fixedHeightDescription: 'Usar altura sin modificaciones',
+    allowHover: 'Mostrar descripción emergente',
+    allowHoverDescription:
+      'Mostrar u ocultar información emergente al pasar el cursor sobre las características de la capa'
   },
   layerManager: {
     addData: 'Añadir datos',
@@ -211,7 +219,8 @@ export default {
     speed: 'velocidad',
     play: 'iniciar',
     pause: 'pausar',
-    reset: 'reiniciar'
+    reset: 'reiniciar',
+    export: 'exportar'
   },
   toolbar: {
     exportImage: 'Exportar imagen',
@@ -255,6 +264,7 @@ export default {
       ratio16_9: '16:9',
       resolutionTitle: 'Resolución',
       resolutionDescription: 'Una alta resolución es mejor para las impresiones.',
+      resolutionPlaceholder: 'Seleccionar resolución...',
       mapLegendTitle: 'Leyenda del mapa',
       mapLegendAdd: 'Añadir leyenda al mapa'
     },

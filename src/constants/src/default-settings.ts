@@ -80,6 +80,13 @@ export const ADD_MAP_STYLE_ID = 'addMapStyle';
  */
 export const EXPORT_MAP_ID = 'exportMap';
 /**
+ * Modal id: export video modal
+ * @constant
+ * @type {string}
+ * @public
+ */
+export const EXPORT_VIDEO_ID = 'exportVideo';
+/**
  * Modal id: save map modal
  * @constant
  * @type {string}
@@ -1020,16 +1027,27 @@ export const SixteenByNineRatioOption: ImageRatioOption = {
 
 export const EXPORT_IMG_RATIO_OPTIONS: ReadonlyArray<ImageRatioOption> = [
   ScreenRatioOption,
-  CustomRatioOption,
   FourByThreeRatioOption,
-  SixteenByNineRatioOption
+  SixteenByNineRatioOption,
+  CustomRatioOption
 ];
 
+export type ExportResolutionOption =
+  | keyof typeof RESOLUTIONS
+  | '1280x720'
+  | '1920x1080'
+  | '2560x1440'
+  | '1600x900'
+  | '1024x768'
+  | '1280x960'
+  | '1600x1200'
+  | '1920x1440';
+
 export type ImageResolutionOption = {
-  id: keyof typeof RESOLUTIONS;
+  id: ExportResolutionOption;
   label: string;
   available: boolean;
-  scale: number;
+  scale?: number;
   getSize: (screenW: number, screenH: number) => {width: number; height: number};
 };
 
@@ -1055,9 +1073,74 @@ export const TwoXResolutionOption: ImageResolutionOption = {
   })
 };
 
+// Fixed dimension options
+export const Resolution1920x1080Option: ImageResolutionOption = {
+  id: '1920x1080',
+  label: '1920 × 1080 (16:9)',
+  available: true,
+  getSize: () => ({width: 1920, height: 1080})
+};
+
+export const Resolution1280x720Option: ImageResolutionOption = {
+  id: '1280x720',
+  label: '1280 × 720 (16:9)',
+  available: true,
+  getSize: () => ({width: 1280, height: 720})
+};
+
+export const Resolution2560x1440Option: ImageResolutionOption = {
+  id: '2560x1440',
+  label: '2560 × 1440 (16:9)',
+  available: true,
+  getSize: () => ({width: 2560, height: 1440})
+};
+
+export const Resolution1600x900Option: ImageResolutionOption = {
+  id: '1600x900',
+  label: '1600 × 900 (16:9)',
+  available: true,
+  getSize: () => ({width: 1600, height: 900})
+};
+
+export const Resolution1024x768Option: ImageResolutionOption = {
+  id: '1024x768',
+  label: '1024 × 768 (4:3)',
+  available: true,
+  getSize: () => ({width: 1024, height: 768})
+};
+
+export const Resolution1280x960Option: ImageResolutionOption = {
+  id: '1280x960',
+  label: '1280 × 960 (4:3)',
+  available: true,
+  getSize: () => ({width: 1280, height: 960})
+};
+
+export const Resolution1600x1200Option: ImageResolutionOption = {
+  id: '1600x1200',
+  label: '1600 × 1200 (4:3)',
+  available: true,
+  getSize: () => ({width: 1600, height: 1200})
+};
+
+export const Resolution1920x1440Option: ImageResolutionOption = {
+  id: '1920x1440',
+  label: '1920 × 1440 (4:3)',
+  available: true,
+  getSize: () => ({width: 1920, height: 1440})
+};
+
 export const EXPORT_IMG_RESOLUTION_OPTIONS: ReadonlyArray<ImageResolutionOption> = [
   OneXResolutionOption,
-  TwoXResolutionOption
+  TwoXResolutionOption,
+  Resolution1280x720Option,
+  Resolution1920x1080Option,
+  Resolution2560x1440Option,
+  Resolution1600x900Option,
+  Resolution1024x768Option,
+  Resolution1280x960Option,
+  Resolution1600x1200Option,
+  Resolution1920x1440Option
 ];
 
 export const EXPORT_DATA_TYPE = keyMirror({
@@ -1322,26 +1405,32 @@ export const DEFAULT_LIGHT_AND_SHADOW_PROPS: {
 export const LIGHT_AND_SHADOW_EFFECT: EffectDescription = {
   type: 'lightAndShadow',
   name: 'Light & Shadow',
+  description: 'effectDescription.lightAndShadow',
   parameters: [
     {name: 'timestamp', min: 0, max: Number.MAX_SAFE_INTEGER},
     {name: 'shadowIntensity', min: 0, max: 1, defaultValue: DEFAULT_SHADOW_INTENSITY},
-    {name: 'sunLightIntensity', min: 0, max: 1, defaultValue: DEFAULT_LIGHT_INTENSITY},
-    {name: 'ambientLightIntensity', min: 0, max: 1, defaultValue: DEFAULT_LIGHT_INTENSITY},
+    {name: 'sunLightIntensity', min: 0, max: 10, defaultValue: DEFAULT_LIGHT_INTENSITY},
+    {name: 'ambientLightIntensity', min: 0, max: 10, defaultValue: DEFAULT_LIGHT_INTENSITY},
     {name: 'shadowColor', type: 'color', min: 0, max: 255, defaultValue: DEFAULT_SHADOW_COLOR},
     {name: 'sunLightColor', type: 'color', min: 0, max: 255, defaultValue: DEFAULT_LIGHT_COLOR},
     {name: 'ambientLightColor', type: 'color', min: 0, max: 255, defaultValue: DEFAULT_LIGHT_COLOR}
   ]
 };
 
+export const DISTANCE_FOG_TYPE = 'distanceFog';
+export const SURFACE_FOG_TYPE = 'surfaceFog';
+
 export const POSTPROCESSING_EFFECTS: {[key: string]: EffectDescription} = {
   ink: {
     type: 'ink',
     name: 'Ink',
+    description: 'effectDescription.ink',
     parameters: [{name: 'strength', min: 0, max: 1}]
   },
   brightnessContrast: {
     type: 'brightnessContrast',
     name: 'Brightness & Contrast',
+    description: 'effectDescription.brightnessContrast',
     parameters: [
       {name: 'brightness', min: -1, max: 1},
       {name: 'contrast', min: -1, max: 1}
@@ -1350,6 +1439,7 @@ export const POSTPROCESSING_EFFECTS: {[key: string]: EffectDescription} = {
   hueSaturation: {
     type: 'hueSaturation',
     name: 'Hue & Saturation',
+    description: 'effectDescription.hueSaturation',
     parameters: [
       {name: 'hue', min: -1, max: 1},
       {name: 'saturation', defaultValue: 0.25, min: -1, max: 1}
@@ -1358,16 +1448,19 @@ export const POSTPROCESSING_EFFECTS: {[key: string]: EffectDescription} = {
   vibrance: {
     type: 'vibrance',
     name: 'Vibrance',
+    description: 'effectDescription.vibrance',
     parameters: [{name: 'amount', defaultValue: 0.5, min: -1, max: 1}]
   },
   sepia: {
     type: 'sepia',
     name: 'Sepia',
+    description: 'effectDescription.sepia',
     parameters: [{name: 'amount', min: 0, max: 1}]
   },
   dotScreen: {
     type: 'dotScreen',
     name: 'Dot Screen',
+    description: 'effectDescription.dotScreen',
     parameters: [
       {
         name: 'angle',
@@ -1392,6 +1485,7 @@ export const POSTPROCESSING_EFFECTS: {[key: string]: EffectDescription} = {
   colorHalftone: {
     type: 'colorHalftone',
     name: 'Color Halftone',
+    description: 'effectDescription.colorHalftone',
     parameters: [
       {
         name: 'angle',
@@ -1416,16 +1510,19 @@ export const POSTPROCESSING_EFFECTS: {[key: string]: EffectDescription} = {
   noise: {
     type: 'noise',
     name: 'Noise',
+    description: 'effectDescription.noise',
     parameters: [{name: 'amount', min: 0, max: 1}]
   },
   triangleBlur: {
     type: 'triangleBlur',
     name: 'Blur (Triangle)',
+    description: 'effectDescription.triangleBlur',
     parameters: [{name: 'radius', min: 0, max: 100}]
   },
   zoomBlur: {
     type: 'zoomBlur',
     name: 'Blur (Zoom)',
+    description: 'effectDescription.zoomBlur',
     parameters: [
       {
         name: 'strength',
@@ -1446,6 +1543,7 @@ export const POSTPROCESSING_EFFECTS: {[key: string]: EffectDescription} = {
   tiltShift: {
     type: 'tiltShift',
     name: 'Blur (Tilt Shift)',
+    description: 'effectDescription.tiltShift',
     parameters: [
       {
         name: 'blurRadius',
@@ -1480,11 +1578,13 @@ export const POSTPROCESSING_EFFECTS: {[key: string]: EffectDescription} = {
   edgeWork: {
     type: 'edgeWork',
     name: 'Edge work',
+    description: 'effectDescription.edgeWork',
     parameters: [{name: 'radius', min: 1, max: 50}]
   },
   vignette: {
     type: 'vignette',
     name: 'Vignette',
+    description: 'effectDescription.vignette',
     parameters: [
       {name: 'amount', min: 0, max: 1},
       {name: 'radius', min: 0, max: 1}
@@ -1493,6 +1593,7 @@ export const POSTPROCESSING_EFFECTS: {[key: string]: EffectDescription} = {
   magnify: {
     type: 'magnify',
     name: 'Magnify',
+    description: 'effectDescription.magnify',
     parameters: [
       {
         name: 'screenXY',
@@ -1525,7 +1626,67 @@ export const POSTPROCESSING_EFFECTS: {[key: string]: EffectDescription} = {
   hexagonalPixelate: {
     type: 'hexagonalPixelate',
     name: 'Hexagonal Pixelate',
+    description: 'effectDescription.hexagonalPixelate',
     parameters: [{name: 'scale', defaultValue: 20, min: 1, max: 50}]
+  },
+  distanceFog: {
+    type: DISTANCE_FOG_TYPE,
+    name: 'Distance Fog',
+    description: 'effectDescription.distanceFog',
+    parameters: [
+      {name: 'density', defaultValue: 0.5, min: 0, max: 1},
+      {name: 'fogStart', label: 'Start', defaultValue: 0.3, min: 0, max: 1},
+      {name: 'fogRange', label: 'Range', defaultValue: 0.5, min: 0.01, max: 1},
+      {name: 'fogColor', type: 'color', min: 0, max: 255, defaultValue: [217, 222, 230]}
+    ]
+  },
+  surfaceFog: {
+    type: SURFACE_FOG_TYPE,
+    name: 'Surface Fog',
+    description: 'effectDescription.surfaceFog',
+    parameters: [
+      {name: 'density', defaultValue: 0.6, min: 0, max: 1},
+      {name: 'height', label: 'Elevation (m)', defaultValue: 50, min: -200, max: 3000},
+      {
+        name: 'animateHeight',
+        type: 'checkbox',
+        label: 'Animate Elevation',
+        tooltip:
+          'Animates elevation from start to end value during video export preview and recording.',
+        defaultValue: false,
+        min: 0,
+        max: 1
+      },
+      {name: 'heightEnd', label: 'End Elevation (m)', defaultValue: 100, min: -200, max: 3000},
+      {
+        name: 'linearEasing',
+        type: 'checkbox',
+        label: 'Linear Easing',
+        tooltip:
+          'Uses constant speed instead of smooth ease-in / ease-out during elevation animation.',
+        defaultValue: false,
+        min: 0,
+        max: 1
+      },
+      {name: 'thickness', label: 'Transition (m)', defaultValue: 50, min: 0, max: 1000},
+      {
+        name: 'fogColor',
+        type: 'color',
+        label: 'Fog Color',
+        min: 0,
+        max: 255,
+        defaultValue: [230, 235, 242]
+      },
+      {
+        name: 'pattern',
+        type: 'checkbox',
+        label: 'Pattern',
+        tooltip: 'Adds a noise pattern to the fog for a more natural, volumetric look.',
+        defaultValue: false,
+        min: 0,
+        max: 1
+      }
+    ]
   }
 };
 
@@ -1550,6 +1711,8 @@ export type EffectType =
   | 'vignette'
   | 'magnify'
   | 'hexagonalPixelate'
+  | 'distanceFog'
+  | 'surfaceFog'
   | 'lightAndShadow';
 
 export const SYNC_TIMELINE_MODES: Record<string, SyncTimelineMode> = {

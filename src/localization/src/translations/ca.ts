@@ -105,7 +105,9 @@ export default {
       '3d': '3D'
     },
     layerUpdateError:
-      "S'ha produït un error durant l'actualització de la capa: {errorMessage}. Assegureu-vos que el format de les dades d’entrada sigui vàlid."
+      "S'ha produït un error durant l'actualització de la capa: {errorMessage}. Assegureu-vos que el format de les dades d’entrada sigui vàlid.",
+    heatmap: 'Heatmap',
+    aggregation: 'Aggregation'
   },
   layerVisConfigs: {
     angle: 'Angle',
@@ -130,6 +132,7 @@ export default {
     targetColor: 'Color destí',
     colorAggregation: 'Agregació de color',
     heightAggregation: 'Agregació alçada',
+    weightAggregation: 'Weight Aggregation',
     resolutionRange: 'Rang de resolució',
     sizeScale: 'Mida escala',
     worldUnitSize: 'Mida de la unitat mundial',
@@ -148,11 +151,16 @@ export default {
     enablePolygonHeight: 'Activa alçada del polígon',
     showWireframe: 'Mostra Wireframe',
     weightIntensity: 'Intensitat de pes',
+    intensity: 'Intensity',
+    threshold: 'Threshold',
     zoomScale: 'Escala de zoom',
     heightRange: 'Rang alçada',
     heightMultiplier: "Multiplicador d'alçada",
     fixedHeight: 'Alçada fixa',
-    fixedHeightDescription: "Utilitzeu l'alçada sense modificacions"
+    fixedHeightDescription: "Utilitzeu l'alçada sense modificacions",
+    allowHover: "Mostra informació d'eina",
+    allowHoverDescription:
+      "Mostra o oculta la informació d'eina en passar el cursor per sobre de les característiques de la capa"
   },
   layerManager: {
     addData: 'Afegeix Dades',
@@ -210,7 +218,8 @@ export default {
     speed: 'velocitat',
     play: 'iniciar',
     pause: 'pausar',
-    reset: 'reiniciar'
+    reset: 'reiniciar',
+    export: 'exportar'
   },
   toolbar: {
     exportImage: 'Exporta imatge',
@@ -254,6 +263,7 @@ export default {
       ratio16_9: '16:9',
       resolutionTitle: 'Resolució',
       resolutionDescription: 'Alta resolució és millor per a les impressions.',
+      resolutionPlaceholder: 'Selecciona resolució...',
       mapLegendTitle: 'Llegenda del mapa',
       mapLegendAdd: 'Afegir llegenda al mapa'
     },

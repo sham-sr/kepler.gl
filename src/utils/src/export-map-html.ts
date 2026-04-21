@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the kepler.gl project
 
-// @ts-nocheck
 import {EXPORT_HTML_MAP_MODES, KEPLER_GL_VERSION} from '@kepler.gl/constants';
 
 /**
@@ -63,6 +62,12 @@ export const exportMapToHTML = (options, version = KEPLER_GL_VERSION) => {
         </style>
 
         <!--MapBox token-->
+        <!--
+          SECURITY NOTE: Your Mapbox access token is embedded below in plain text.
+          Anyone with access to this HTML file can see and use this token.
+          Consider using a scoped token with URL restrictions to limit misuse.
+          See: https://docs.mapbox.com/accounts/guides/tokens/#url-restrictions
+        -->
         <script>
           /**
            * Provide your MapBox Token
@@ -139,6 +144,66 @@ export const exportMapToHTML = (options, version = KEPLER_GL_VERSION) => {
           /** END STORE **/
 
           /** COMPONENTS **/
+          /** Custom map control factory to add Effects button + panel **/
+          var CustomMapControlFactory = (function createCustomMapControl(react, keplerGl) {
+            var EffectControlFactory = keplerGl.EffectControlFactory;
+            var EffectManagerFactory = keplerGl.EffectManagerFactory;
+            var MapControlFactory = keplerGl.MapControlFactory;
+
+            if (!EffectControlFactory || !EffectManagerFactory || !MapControlFactory) {
+              console.warn('kepler.gl: Effect factories not available, skipping effect control injection');
+              return null;
+            }
+
+            function EffectMapControlFactory(EffectControl, EffectManager) {
+              var args = Array.prototype.slice.call(arguments, 2);
+              var MapControl = MapControlFactory.apply(null, args);
+              var actionComponents = (MapControl.defaultActionComponents || []).concat([EffectControl]);
+
+              var EffectMapControl = function EffectMapControl(props) {
+                var showEffects = Boolean(props.mapControls && props.mapControls.effect && props.mapControls.effect.active);
+                return react.createElement(
+                  'div',
+                  {style: {
+                    position: 'absolute',
+                    display: 'flex',
+                    top: (props.top || 0) + 'px',
+                    right: 0,
+                    zIndex: 1,
+                    maxHeight: '100%',
+                    pointerEvents: 'none'
+                  }},
+                  react.createElement(
+                    'div',
+                    {style: {position: 'relative', pointerEvents: 'all'}},
+                    react.createElement(MapControl, Object.assign({}, props, {top: 0, actionComponents: actionComponents}))
+                  ),
+                  showEffects
+                    ? react.createElement('div', {
+                        style: {
+                          maxHeight: '100%',
+                          overflow: 'hidden',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          pointerEvents: 'all',
+                          marginTop: '10px'
+                        }
+                      }, react.createElement(EffectManager, null))
+                    : null
+                );
+              };
+
+              return EffectMapControl;
+            }
+            EffectMapControlFactory.deps = [EffectControlFactory, EffectManagerFactory].concat(MapControlFactory.deps);
+
+            return [MapControlFactory, EffectMapControlFactory];
+          }(React, KeplerGl));
+
+          var KeplerGlComponent = CustomMapControlFactory
+            ? KeplerGl.injectComponents([CustomMapControlFactory])
+            : KeplerGl.KeplerGl;
+
           var KeplerElement = (function makeKeplerElement(react, keplerGl, mapboxToken) {
             var LogoSvg = function LogoSvg() {
               return react.createElement(
@@ -194,7 +259,7 @@ export const exportMapToHTML = (options, version = KEPLER_GL_VERSION) => {
                 'div',
                 {style: {position: 'absolute', left: 0, width: '100vw', height: '100vh'}},
                 ${options.mode === EXPORT_HTML_MAP_MODES.READ ? 'LogoSvg(),' : ''}
-                react.createElement(keplerGl.KeplerGl, {
+                react.createElement(KeplerGlComponent, {
                   mapboxApiAccessToken: mapboxToken,
                   id: "map",
                   width: windowDimension.width,

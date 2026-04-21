@@ -118,17 +118,19 @@ export default {
       '3d': '3D',
       vectortile: 'векторная плитка',
       rastertile: 'растровая плитка',
-      wms: 'WMS'
+      wms: 'WMS',
+      tile3d: '3D плитка'
     },
     wms: {
       hover: 'Значение:'
     },
     layerUpdateError:
       'Ошибка при обновлении слоя: {errorMessage}. Убедитесь, что формат входных данных корректен.',
-    interaction: 'Взаимодействие'
+    interaction: 'Взаимодействие',
+    heatmap: 'Тепловая карта',
+    aggregation: 'Агрегация'
   },
   layerVisConfigs: {
-    angle: 'Угол',
     strokeWidth: 'Ширина штриха (в пикселях)',
     strokeWidthRange: 'Диапазон ширины штриха',
     radius: 'Радиус',
@@ -148,6 +150,7 @@ export default {
     targetColor: 'Целевой цвет',
     colorAggregation: 'Цветовая агрегация',
     heightAggregation: 'Агрегация по высоте',
+    weightAggregation: 'Weight Aggregation',
     resolutionRange: 'Диапазон разрешения',
     sizeScale: 'Шкала размеров',
     worldUnitSize: 'Мировые ед.изм.',
@@ -166,12 +169,15 @@ export default {
     enablePolygonHeight: 'Включить высоту многоугольника',
     showWireframe: 'Показать каркас',
     weightIntensity: 'Вес Интенсивность',
+    intensity: 'Intensity',
+    threshold: 'Threshold',
     zoomScale: 'Масштаб увеличения',
     heightRange: 'Диапазон высоты',
     heightMultiplier: 'Множитель высоты',
     fixedHeight: 'Фиксированная высота',
     fixedHeightDescription: 'Использовать высоту без изменений',
-    allowHover: 'Разрешить наведение',
+    allowHover: 'Показать подсказку',
+    allowHoverDescription: 'Показать или скрыть подсказку при наведении на элементы слоя',
     showNeighborOnHover: 'Выделять соседей при наведении',
     showHighlightColor: 'Показать цвет выделения',
     darkModeEnabled: 'Темная базовая карта',
@@ -322,6 +328,7 @@ export default {
       ratio16_9: '16:9',
       resolutionTitle: 'Разрешение',
       resolutionDescription: 'Для печати лучше использовать высокое разрешение',
+      resolutionPlaceholder: 'Выберите разрешение...',
       mapLegendTitle: 'Легенда карты',
       mapLegendAdd: 'Добавить легенду на карту'
     },

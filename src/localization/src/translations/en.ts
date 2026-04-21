@@ -118,14 +118,17 @@ export default {
       '3d': '3D',
       vectortile: 'vector tile',
       rastertile: 'raster tile',
-      wms: 'WMS'
+      wms: 'WMS',
+      tile3d: '3D tile'
     },
     wms: {
       hover: 'Value:'
     },
     layerUpdateError:
       'An error occurred during layer update: {errorMessage}. Make sure the format of the input data is valid.',
-    interaction: 'Interaction'
+    interaction: 'Interaction',
+    heatmap: 'Heatmap',
+    aggregation: 'Aggregation'
   },
   layerVisConfigs: {
     angle: 'Angle',
@@ -141,6 +144,7 @@ export default {
     billboardDescription: 'Orient geometry towards the camera',
     fadeTrail: 'Fade trail',
     opacity: 'Opacity',
+    pointSize: 'Point Size',
     coverage: 'Coverage',
     outline: 'Outline',
     colorRange: 'Color range',
@@ -150,6 +154,7 @@ export default {
     targetColor: 'Target Color',
     colorAggregation: 'Color Aggregation',
     heightAggregation: 'Height Aggregation',
+    weightAggregation: 'Weight Aggregation',
     resolutionRange: 'Resolution range',
     sizeScale: 'Size Scale',
     worldUnitSize: 'World Unit Size',
@@ -167,12 +172,15 @@ export default {
     enablePolygonHeight: 'Enable Polygon Height',
     showWireframe: 'Show Wireframe',
     weightIntensity: 'Weight Intensity',
+    intensity: 'Intensity',
+    threshold: 'Threshold',
     zoomScale: 'Zoom Scale',
     heightRange: 'Height Range',
     heightMultiplier: 'Height Multiplier',
     fixedHeight: 'Fixed height',
     fixedHeightDescription: 'Use height without modifications',
-    allowHover: 'Allow Hover',
+    allowHover: 'Allow hover',
+    allowHoverDescription: 'Show or hide tooltip when hovering over layer features',
     showNeighborOnHover: 'Highlight Neighbors On Hover',
     showHighlightColor: 'Show highlight Color',
     darkModeEnabled: 'Dark base map',
@@ -200,6 +208,43 @@ export default {
     time: 'Time',
     timezone: 'Timezone'
   },
+  effectDescription: {
+    lightAndShadow:
+      'Simulates realistic sun lighting and shadow casting based on time of day and geographic location. Adjustable shadow intensity, sun and ambient light colors.',
+    ink: 'Applies an ink-wash artistic style that darkens edges and creates a hand-drawn appearance. Adjust strength to control the intensity of the effect.',
+    brightnessContrast:
+      'Adjusts the overall brightness and contrast of the map. Use positive values to brighten or increase contrast, negative values to darken or flatten the image.',
+    hueSaturation:
+      'Shifts the color hue and adjusts saturation across the entire map. Useful for creating color themes or desaturating the view.',
+    vibrance:
+      'Selectively boosts the intensity of muted colors without oversaturating already vivid ones. Produces a more natural-looking color enhancement than saturation.',
+    sepia:
+      'Applies a warm brownish tone reminiscent of aged photographs. Control the amount to blend between the original colors and the sepia look.',
+    dotScreen:
+      'Converts the image into a pattern of monochrome dots, resembling newspaper halftone printing. Adjust angle, dot size, and center position.',
+    colorHalftone:
+      'Simulates CMYK color halftone printing with separate dot patterns for each color channel. Control angle, dot size, and center position.',
+    noise:
+      'Adds random film-grain style noise across the map. Useful for a textured, analog aesthetic or to reduce color banding.',
+    triangleBlur:
+      'Applies a smooth Gaussian-like blur uniformly across the map. Control the blur radius to adjust the level of softness.',
+    zoomBlur:
+      'Creates a radial motion blur that emanates from a center point, simulating a camera zoom. Adjust strength and center position.',
+    tiltShift:
+      'Simulates a tilt-shift lens effect that blurs areas outside a focal band, creating a miniature model look. Set the focal band with start/end positions.',
+    edgeWork:
+      'Highlights structural edges in the image using an artistic charcoal-sketch style. Adjust the detection radius to control line thickness.',
+    vignette:
+      'Darkens the corners and edges of the map, drawing focus toward the center. Control the darkening amount and the radius of the clear area.',
+    magnify:
+      'Creates a circular magnifying glass overlay at a configurable position. Adjust size, zoom level, and border width.',
+    hexagonalPixelate:
+      'Replaces the image with a grid of hexagonal tiles, each filled with the average color of the area it covers. Adjust the tile scale.',
+    distanceFog:
+      'Fades distant objects into a fog color based on their depth from the camera, enhancing the sense of depth. Control density, start distance, range, and fog color.',
+    surfaceFog:
+      'Renders a fog layer at a specific elevation above the terrain surface. Adjust elevation, transition thickness, density, color, and an optional noise pattern.'
+  },
   layerConfiguration: {
     defaultDescription: 'Calculate {property} based on selected field',
     howTo: 'How to',
@@ -221,7 +266,8 @@ export default {
     rowCount: '{rowCount} rows',
     vectorTile: 'Vector tile',
     rasterTile: 'Raster tile',
-    wmsTile: 'WMS tile'
+    wmsTile: 'WMS tile',
+    tile3d: '3D tile'
   },
   tooltip: {
     hideLayer: 'Hide layer',
@@ -274,6 +320,7 @@ export default {
     exportImage: 'Export Image',
     exportData: 'Export Data',
     exportMap: 'Export Map',
+    exportVideo: 'Export Video',
     shareMapURL: 'Share Map URL',
     saveMap: 'Save Map',
     select: 'Select',
@@ -290,6 +337,11 @@ export default {
     noLayersToFilter: 'No layers to filter'
   },
 
+  exportVideoModal: {
+    animation: 'Animation',
+    settings: 'Settings'
+  },
+
   modal: {
     title: {
       deleteDataset: 'Delete Dataset',
@@ -297,6 +349,7 @@ export default {
       exportImage: 'Export Image',
       exportData: 'Export Data',
       exportMap: 'Export Map',
+      exportVideo: 'Export Video',
       addCustomMapboxStyle: 'Add Custom Map Style',
       saveMap: 'Save Map',
       shareURL: 'Share URL'
@@ -319,8 +372,13 @@ export default {
       ratio16_9: '16:9',
       resolutionTitle: 'Resolution',
       resolutionDescription: 'High resolution is better for prints.',
+      resolutionPlaceholder: 'Select resolution...',
       mapLegendTitle: 'Map Legend',
       mapLegendAdd: 'Add legend on map'
+    },
+    exportVideo: {
+      animation: 'Animation',
+      settings: 'Settings'
     },
     exportData: {
       datasetTitle: 'Dataset',
@@ -388,6 +446,8 @@ export default {
         tokenPlaceholder: 'Paste your Mapbox access token',
         tokenMisuseWarning:
           '* If you do not provide your own token, the map may fail to display at any time when we replace ours to avoid misuse. ',
+        tokenSecurityWarning:
+          '* Warning: your Mapbox token will be embedded in the exported HTML file. Anyone with access to this file can see and use your token. Use a scoped token with URL restrictions when possible. ',
         tokenDisclaimer: 'You can change the Mapbox token later using the following instructions: ',
         tokenUpdate: 'How to update an existing map token.',
         modeTitle: 'Map Mode',

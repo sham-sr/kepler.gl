@@ -103,7 +103,9 @@ export default {
       trip: 'trip',
       s2: 'S2',
       '3d': '3D'
-    }
+    },
+    heatmap: 'Heatmap',
+    aggregation: 'Aggregation'
   },
   layerVisConfigs: {
     angle: '角度',
@@ -128,6 +130,7 @@ export default {
     targetColor: 'Targetの色',
     colorAggregation: '色の集計',
     heightAggregation: '高さの集計',
+    weightAggregation: 'Weight Aggregation',
     resolutionRange: '解像度の範囲',
     sizeScale: 'サイズのスケール',
     worldUnitSize: 'World Unit Size',
@@ -145,11 +148,15 @@ export default {
     enablePolygonHeight: 'ポリゴンの高さを有効にする',
     showWireframe: 'ワイヤーフレームを表示',
     weightIntensity: '重みづけの強さ',
+    intensity: 'Intensity',
+    threshold: 'Threshold',
     zoomScale: 'ズームのスケール',
     heightRange: '高さの範囲',
     heightMultiplier: '高さ乗数',
     fixedHeight: '固定高さ',
-    fixedHeightDescription: '高さを変更せずに使用する'
+    fixedHeightDescription: '高さを変更せずに使用する',
+    allowHover: 'ツールチップを表示',
+    allowHoverDescription: 'レイヤー要素にホバーしたときにツールチップを表示または非表示にする'
   },
   layerManager: {
     addData: 'データ追加',
@@ -207,7 +214,8 @@ export default {
     speed: '速度',
     play: '再生',
     pause: '一時停止',
-    reset: 'リセット'
+    reset: 'リセット',
+    export: 'エクスポート'
   },
   toolbar: {
     exportImage: '画像を出力',
@@ -251,6 +259,7 @@ export default {
       ratio16_9: '16:9',
       resolutionTitle: '解像度',
       resolutionDescription: '印刷には高解像度が適しています。',
+      resolutionPlaceholder: '解像度を選択...',
       mapLegendTitle: '地図の凡例',
       mapLegendAdd: '地図に判例を追加'
     },

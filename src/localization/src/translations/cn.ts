@@ -102,7 +102,9 @@ export default {
       trip: 'trip',
       s2: 'S2',
       '3d': '3D'
-    }
+    },
+    heatmap: 'Heatmap',
+    aggregation: 'Aggregation'
   },
   layerVisConfigs: {
     angle: '角度',
@@ -124,6 +126,7 @@ export default {
     targetColor: '目标颜色',
     colorAggregation: '颜色聚合',
     heightAggregation: '高度聚合',
+    weightAggregation: 'Weight Aggregation',
     resolutionRange: '分辨率范围',
     sizeScale: '大小比例',
     worldUnitSize: '世界单位大小',
@@ -140,8 +143,12 @@ export default {
     enablePolygonHeight: '启用多边形高度',
     showWireframe: '显示线框',
     weightIntensity: '加权强度',
+    intensity: 'Intensity',
+    threshold: 'Threshold',
     zoomScale: '缩放比例',
-    heightRange: '高度范围'
+    heightRange: '高度范围',
+    allowHover: '显示工具提示',
+    allowHoverDescription: '悬停在图层要素上时显示或隐藏工具提示'
   },
   layerManager: {
     addData: '添加数据',
@@ -199,7 +206,8 @@ export default {
     speed: '速度',
     play: '播放',
     pause: '暂停',
-    reset: '重置'
+    reset: '重置',
+    export: '导出'
   },
   toolbar: {
     exportImage: '导出图片',
@@ -247,6 +255,7 @@ export default {
       ratio16_9: '16:9',
       resolutionTitle: '分辨率',
       resolutionDescription: '高分辨率更适合打印。',
+      resolutionPlaceholder: '选择分辨率...',
       mapLegendTitle: '地图图例',
       mapLegendAdd: '在地图上添加图例'
     },

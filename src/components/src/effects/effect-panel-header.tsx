@@ -8,8 +8,11 @@ import styled from 'styled-components';
 import {
   EFFECT_DESCRIPTIONS,
   LIGHT_AND_SHADOW_EFFECT,
-  POSTPROCESSING_EFFECTS
+  POSTPROCESSING_EFFECTS,
+  DISTANCE_FOG_TYPE,
+  SURFACE_FOG_TYPE
 } from '@kepler.gl/constants';
+import {useIntl} from 'react-intl';
 
 import PanelHeaderActionFactory, {PanelHeaderActionIcon} from '../side-panel/panel-header-action';
 import {
@@ -35,9 +38,20 @@ import {
   VignetteEffectIcon,
   MagnifyEffectIcon,
   HexagonalPixelateEffectIcon,
+  DistanceFogEffectIcon,
+  SurfaceFogEffectIcon,
   BaseProps
 } from '../common/icons';
-import {StyledPanelHeader} from '../common/styled-components';
+import {StyledPanelHeader, Tooltip} from '../common/styled-components';
+
+const MultilineTooltip = styled(Tooltip)`
+  &.__react_component_tooltip {
+    max-width: 280px;
+    white-space: normal;
+    line-height: 1.4;
+    text-align: left;
+  }
+`;
 
 export type ActionItem = {
   key: string;
@@ -99,7 +113,9 @@ const defaultEffectIcons = {
   [POSTPROCESSING_EFFECTS.edgeWork.type]: EdgeWorkEffectIcon,
   [POSTPROCESSING_EFFECTS.vignette.type]: VignetteEffectIcon,
   [POSTPROCESSING_EFFECTS.magnify.type]: MagnifyEffectIcon,
-  [POSTPROCESSING_EFFECTS.hexagonalPixelate.type]: HexagonalPixelateEffectIcon
+  [POSTPROCESSING_EFFECTS.hexagonalPixelate.type]: HexagonalPixelateEffectIcon,
+  [DISTANCE_FOG_TYPE]: DistanceFogEffectIcon,
+  [SURFACE_FOG_TYPE]: SurfaceFogEffectIcon
 };
 
 const StyledEffectPanelHeader = styled(StyledPanelHeader)`
@@ -299,15 +315,23 @@ function EffectPanelHeaderFactory(
       isConfigActive,
       isDragNDropEnabled = true,
       type,
+      effectId,
       onToggleEnableConfig,
       listeners,
       showSortHandle = true
     } = props;
 
-    const label = useMemo(() => {
-      const description = EFFECT_DESCRIPTIONS.find(_description => _description.type === type);
-      return description?.name || 'Effect';
+    const intl = useIntl();
+
+    const effectDesc = useMemo(() => {
+      return EFFECT_DESCRIPTIONS.find(_description => _description.type === type);
     }, [type]);
+
+    const label = effectDesc?.name || 'Effect';
+    const descriptionText = effectDesc?.description
+      ? intl.formatMessage({id: effectDesc.description, defaultMessage: ''})
+      : '';
+    const tooltipId = `effect-header-${effectId}`;
 
     const EffectIcon = defaultEffectIcons[type];
 
@@ -329,7 +353,17 @@ function EffectPanelHeaderFactory(
 
         <EffectIconWrapper>{EffectIcon ? <EffectIcon height="18px" /> : null}</EffectIconWrapper>
 
-        <StyledEffectTitleSection>{label}</StyledEffectTitleSection>
+        <StyledEffectTitleSection
+          data-tip={descriptionText || undefined}
+          data-for={descriptionText ? tooltipId : undefined}
+        >
+          {label}
+          {descriptionText ? (
+            <MultilineTooltip id={tooltipId} effect="solid" place="bottom" delayShow={500}>
+              {descriptionText}
+            </MultilineTooltip>
+          ) : null}
+        </StyledEffectTitleSection>
 
         <EffectPanelHeaderActionSection {...props} />
       </StyledEffectPanelHeader>
