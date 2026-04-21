@@ -58,6 +58,7 @@
     "@loaders.gl/wkt": "^4.3.4",
     "@luma.gl/constants": "^9.2.6",
     "@luma.gl/core": "^9.2.6",
+    "@luma.gl/gltf": "^9.2.6",
     "@mapbox/geojson-normalize": "0.0.1",
     "@turf/bbox": "^6.0.1",
     "@turf/boolean-within": "^6.0.1",

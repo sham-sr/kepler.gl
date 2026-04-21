@@ -5251,6 +5251,7 @@ __metadata:
     "@loaders.gl/wkt": "npm:^4.3.4"
     "@luma.gl/constants": "npm:^9.2.6"
     "@luma.gl/core": "npm:^9.2.6"
+    "@luma.gl/gltf": "npm:^9.2.6"
     "@mapbox/geojson-normalize": "npm:0.0.1"
     "@turf/bbox": "npm:^6.0.1"
     "@turf/boolean-within": "npm:^6.0.1"
@@ -6021,7 +6022,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@luma.gl/gltf@npm:~9.2.6":
+"@luma.gl/gltf@npm:9.2.6":
   version: 9.2.6
   resolution: "@luma.gl/gltf@npm:9.2.6"
   dependencies:

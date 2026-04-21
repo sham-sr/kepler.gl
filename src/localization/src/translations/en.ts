@@ -718,10 +718,18 @@ ${'```'}
           targetColor: 'Target'
         }
       },
-      default: {
+      point: {
         singleColor: {
           color: 'Fill color',
           strokeColor: 'Outline'
+        }
+      },
+      default: {
+        singleColor: {
+          color: 'Fill color',
+          strokeColor: 'Outline',
+          sourceColor: 'Source',
+          targetColor: 'Target'
         }
       }
     }

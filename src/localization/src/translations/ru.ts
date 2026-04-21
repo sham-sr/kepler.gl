@@ -668,10 +668,18 @@ ${'```'}
           targetColor: 'Цель'
         }
       },
-      default: {
+      point: {
         singleColor: {
           color: 'Цвет заливки',
           strokeColor: 'Контур'
+        }
+      },
+      default: {
+        singleColor: {
+          color: 'Цвет заливки',
+          strokeColor: 'Контур',
+          sourceColor: 'Источник',
+          targetColor: 'Цель'
         }
       }
     }
