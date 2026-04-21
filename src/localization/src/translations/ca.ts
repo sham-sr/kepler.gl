@@ -477,5 +477,14 @@ export default {
   'Bug Report': "Informe d'errors",
   'User Guide': "Guia d'usuari",
   Save: 'Desa',
-  Share: 'Comparteix'
+  Share: 'Comparteix',
+  dataTable: {
+    displayFormat: {
+      setIntegerNumberFormat: 'Format de nombres enters',
+      setFloatNumberFormat: 'Format de nombres amb decimals',
+      setTimestampFormat: 'Format de data i hora',
+      setDateFormat: 'Format de data',
+      setBooleanFormat: 'Format booleà'
+    }
+  }
 };

@@ -449,5 +449,14 @@ export default {
   'Bug Report': 'Bugiraportointi',
   'User Guide': 'Opas',
   Save: 'Tallenna',
-  Share: 'Jaa'
+  Share: 'Jaa',
+  dataTable: {
+    displayFormat: {
+      setIntegerNumberFormat: 'Kokonaislukujen muoto',
+      setFloatNumberFormat: 'Liukulukujen muoto',
+      setTimestampFormat: 'Aikaleiman muoto',
+      setDateFormat: 'Päivämäärän muoto',
+      setBooleanFormat: 'Totuusarvon muoto'
+    }
+  }
 };

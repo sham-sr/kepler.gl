@@ -3,6 +3,7 @@
 
 import React, {useCallback, useState} from 'react';
 import styled from 'styled-components';
+import {useIntl} from 'react-intl';
 
 import {getFieldFormatLabels} from '@kepler.gl/utils';
 import {ALL_FIELD_TYPES, TooltipFormat} from '@kepler.gl/constants';
@@ -106,29 +107,30 @@ function DataTableConfigFactory() {
   };
 
   const DataTableConfig = ({columns, colMeta, setColumnDisplayFormat, onClose}) => {
+    const intl = useIntl();
     const formatConfigs = [
       {
-        title: '# Set Integer Number Format',
+        titleId: 'dataTable.displayFormat.setIntegerNumberFormat',
         id: 'input-iteger-format',
         displayType: ALL_FIELD_TYPES.integer
       },
       {
-        title: '# Set Float Number Format',
+        titleId: 'dataTable.displayFormat.setFloatNumberFormat',
         id: 'input-float-format',
         displayType: ALL_FIELD_TYPES.real
       },
       {
-        title: '# Set Timestamp Format',
+        titleId: 'dataTable.displayFormat.setTimestampFormat',
         id: 'input-datetime-format',
         displayType: ALL_FIELD_TYPES.timestamp
       },
       {
-        title: '# Set Date Format',
+        titleId: 'dataTable.displayFormat.setDateFormat',
         id: 'input-date-format',
         displayType: ALL_FIELD_TYPES.date
       },
       {
-        title: '# Set Boolean Format',
+        titleId: 'dataTable.displayFormat.setBooleanFormat',
         id: 'input-bool-format',
         displayType: ALL_FIELD_TYPES.boolean
       }
@@ -139,7 +141,7 @@ function DataTableConfigFactory() {
         <StyledConfigPanelContent>
           {formatConfigs.map((config, index) => (
             <NumberFormatConfig
-              title={`${config.title}`}
+              title={intl.formatMessage({id: config.titleId})}
               key={index}
               id={config.id}
               defaultFormat={'None'}

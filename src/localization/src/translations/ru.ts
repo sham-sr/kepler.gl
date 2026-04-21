@@ -654,6 +654,16 @@ ${'```'}
   'User Guide': 'Инструкции',
   Save: 'Сохранить',
   Share: 'Поделиться',
+  'Update color': 'Обновить цвет',
+  dataTable: {
+    displayFormat: {
+      setIntegerNumberFormat: 'Формат целых чисел',
+      setFloatNumberFormat: 'Формат дробных чисел',
+      setTimestampFormat: 'Формат даты и времени',
+      setDateFormat: 'Формат даты',
+      setBooleanFormat: 'Формат логических значений'
+    }
+  },
   mapLegend: {
     layers: {
       line: {

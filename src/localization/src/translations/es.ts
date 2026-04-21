@@ -478,5 +478,14 @@ export default {
   'Bug Report': 'Informe de errores',
   'User Guide': 'Guía de usuario',
   Save: 'Guadar',
-  Share: 'Compartir'
+  Share: 'Compartir',
+  dataTable: {
+    displayFormat: {
+      setIntegerNumberFormat: 'Formato de números enteros',
+      setFloatNumberFormat: 'Formato de números decimales',
+      setTimestampFormat: 'Formato de fecha y hora',
+      setDateFormat: 'Formato de fecha',
+      setBooleanFormat: 'Formato booleano'
+    }
+  }
 };

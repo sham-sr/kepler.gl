@@ -704,6 +704,16 @@ ${'```'}
   'User Guide': 'User Guide',
   Save: 'Save',
   Share: 'Share',
+  'Update color': 'Update color',
+  dataTable: {
+    displayFormat: {
+      setIntegerNumberFormat: 'Set Integer Number Format',
+      setFloatNumberFormat: 'Set Float Number Format',
+      setTimestampFormat: 'Set Timestamp Format',
+      setDateFormat: 'Set Date Format',
+      setBooleanFormat: 'Set Boolean Format'
+    }
+  },
   mapLegend: {
     layers: {
       line: {

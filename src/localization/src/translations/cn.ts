@@ -468,5 +468,14 @@ export default {
   'Bug Report': '错误报告',
   'User Guide': '用户指南',
   Save: '保存',
-  Share: '分享'
+  Share: '分享',
+  dataTable: {
+    displayFormat: {
+      setIntegerNumberFormat: '整数格式',
+      setFloatNumberFormat: '浮点数格式',
+      setTimestampFormat: '日期时间格式',
+      setDateFormat: '日期格式',
+      setBooleanFormat: '布尔值格式'
+    }
+  }
 };

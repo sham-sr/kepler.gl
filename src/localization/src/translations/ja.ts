@@ -474,5 +474,14 @@ export default {
   'Bug Report': 'バグを報告',
   'User Guide': 'ユーザーガイド',
   Save: '保存',
-  Share: '共有'
+  Share: '共有',
+  dataTable: {
+    displayFormat: {
+      setIntegerNumberFormat: '整数の表示形式',
+      setFloatNumberFormat: '浮動小数点数の表示形式',
+      setTimestampFormat: 'タイムスタンプの表示形式',
+      setDateFormat: '日付の表示形式',
+      setBooleanFormat: '真偽値の表示形式'
+    }
+  }
 };
