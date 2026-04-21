@@ -9,12 +9,31 @@ import copyPlugin from 'esbuild-plugin-copy';
 import process from 'node:process';
 import fs from 'node:fs';
 import {spawn} from 'node:child_process';
-import {join} from 'node:path';
+import {join, dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import KeplerPackage from '../../package.json' assert {type: 'json'};
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 const args = process.argv;
-const LIB_DIR = '../../';
-const NODE_MODULES_DIR = join(LIB_DIR, 'node_modules');
+
+const shouldSanitizeEnvForDefine =
+  process.platform === 'win32' && process.env.KEPLER_ESBUILD_SANITIZE_ENV === '1';
+
+const sanitizeEnvForDefine = () => {
+  Object.keys(process.env).forEach(key => {
+    if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key)) {
+      delete process.env[key];
+    }
+  });
+};
+
+if (shouldSanitizeEnvForDefine) {
+  sanitizeEnvForDefine();
+}
+
+const LIB_DIR = join(__dirname, '..', '..');
+const NODE_MODULES_DIR = join(__dirname, 'node_modules');
 const SRC_DIR = join(LIB_DIR, 'src');
 
 // For debugging deck.gl, load deck.gl from external deck.gl directory
@@ -23,7 +42,7 @@ const EXTERNAL_DECK_SRC = join(LIB_DIR, 'deck.gl');
 // For debugging loaders.gl, load loaders.gl from external loaders.gl directory
 const EXTERNAL_LOADERS_SRC = join(LIB_DIR, 'loaders.gl');
 
-const port = 8080;
+const port = Number(process.env.PORT) || 8080;
 const NODE_ENV = JSON.stringify(process.env.NODE_ENV || 'production');
 
 // add alias to serve from kepler src, resolve libraries so there is only one copy of them

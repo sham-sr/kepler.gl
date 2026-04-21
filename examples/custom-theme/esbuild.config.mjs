@@ -9,16 +9,34 @@ import copyPlugin from 'esbuild-plugin-copy';
 import process from 'node:process';
 import fs from 'node:fs';
 import {spawn} from 'node:child_process';
-import {join} from 'node:path';
+import {join, dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const args = process.argv;
 
-const port = 8080;
+const shouldSanitizeEnvForDefine =
+  process.platform === 'win32' && process.env.KEPLER_ESBUILD_SANITIZE_ENV === '1';
+
+const sanitizeEnvForDefine = () => {
+  Object.keys(process.env).forEach(key => {
+    if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key)) {
+      delete process.env[key];
+    }
+  });
+};
+
+if (shouldSanitizeEnvForDefine) {
+  sanitizeEnvForDefine();
+}
+
+const port = Number(process.env.PORT) || 8080;
 
 const NODE_ENV = JSON.stringify(process.env.NODE_ENV || 'production');
 
 // Ensure a single instance of React and friends to avoid invalid hook calls
-const ROOT_NODE_MODULES = join('..', '..', 'node_modules');
+const ROOT_NODE_MODULES = join(__dirname, 'node_modules');
 const thirdPartyAliases = {
   react: join(ROOT_NODE_MODULES, 'react'),
   'react-dom': join(ROOT_NODE_MODULES, 'react-dom'),

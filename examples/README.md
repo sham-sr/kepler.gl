@@ -8,6 +8,23 @@ To start each example, cd into the folder then run:
 yarn && yarn start
 ```
 
+### Windows and Yarn 4
+
+Example folders are **not** listed in the root `package.json` `workspaces`, so Yarn needs a **local `yarn.lock`** in each example (this repo includes a stub file; the first `yarn install` there will fill it in).
+
+From the **repository root**, after `yarn install` at the root:
+
+- **Demo app:** `yarn start:windows` (sets OpenSSL / esbuild env for Windows).
+- **Other examples:** `yarn start:open-modal:windows`, `yarn start:custom-reducer:windows`, `yarn start:replace-component:windows`, `yarn start:custom-theme:windows`, `yarn start:custom-map-style:windows`, `yarn start:node-app:windows`.
+
+Or manually: `cd examples/<name>`, then `yarn install`, then `yarn start-local` / `yarn start:local` / `yarn start` as in that folder’s `package.json`.
+
+**Port 8080 already in use** (e.g. demo-app is running): stop the other dev server, or run another example on a free port, for example in PowerShell:
+
+`$env:PORT='8081'; yarn start:custom-theme:windows`
+
+On Unix/macOS you can keep using `yarn start:open-modal` etc.
+
 - ### [Demo App][demo-app]
 
   kepler.gl as a single page app, loading sample maps from remote url, saving map data to dropbox. This is also the source code of kepler.gl/#/demo.

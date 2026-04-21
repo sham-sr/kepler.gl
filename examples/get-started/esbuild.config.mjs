@@ -9,7 +9,7 @@ import {spawn} from 'node:child_process';
 
 const args = process.argv;
 
-const port = 8080;
+const port = Number(process.env.PORT) || 8080;
 
 const config = {
   platform: 'browser',

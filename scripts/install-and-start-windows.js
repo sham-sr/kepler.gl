@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the kepler.gl project
 
-const {existsSync} = require('fs');
+const {existsSync, statSync} = require('fs');
 const {execSync} = require('child_process');
 
 const folder = process.argv[2];
@@ -16,7 +16,11 @@ process.env.KEPLER_ESBUILD_SANITIZE_ENV = process.env.KEPLER_ESBUILD_SANITIZE_EN
 process.env.NODE_OPTIONS = process.env.NODE_OPTIONS || '--openssl-legacy-provider';
 process.env.KEPLER_USE_LOCAL_DUCKDB = process.env.KEPLER_USE_LOCAL_DUCKDB || '1';
 
-const cmd = !existsSync(`${folder}/node_modules`) ? `yarn && yarn ${script}` : `yarn ${script}`;
+const lockPath = `${folder}/yarn.lock`;
+const lockMissingOrEmpty = !existsSync(lockPath) || statSync(lockPath).size === 0;
+const needsInstall = !existsSync(`${folder}/node_modules`) || lockMissingOrEmpty;
+
+const cmd = needsInstall ? `yarn && yarn ${script}` : `yarn ${script}`;
 
 execSync(cmd, {
   cwd: folder,
