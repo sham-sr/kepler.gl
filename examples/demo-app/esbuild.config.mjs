@@ -8,14 +8,16 @@ import {dotenvRun} from '@dotenv-run/esbuild';
 import process from 'node:process';
 import fs from 'node:fs';
 import {spawn} from 'node:child_process';
-import {join} from 'node:path';
+import {join, resolve, dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import KeplerPackage from '../../package.json' assert {type: 'json'};
 
 const args = process.argv;
+const currentDir = dirname(fileURLToPath(import.meta.url));
 
-const BASE_NODE_MODULES_DIR = './node_modules';
+const BASE_NODE_MODULES_DIR = join(currentDir, 'node_modules');
 
-const LIB_DIR = '../../';
+const LIB_DIR = resolve(currentDir, '../..');
 const NODE_MODULES_DIR = join(LIB_DIR, 'node_modules');
 const SRC_DIR = join(LIB_DIR, 'src');
 
@@ -26,9 +28,25 @@ const EXTERNAL_DECK_SRC = join(LIB_DIR, 'deck.gl');
 const EXTERNAL_LOADERS_SRC = join(LIB_DIR, 'loaders.gl');
 
 // For debugging hubble.gl, load hubble.gl from external hubble.gl directory
-const EXTERNAL_HUBBLE_SRC = join(LIB_DIR, '../../hubble.gl');
+const EXTERNAL_HUBBLE_SRC = resolve(LIB_DIR, '../../hubble.gl');
 
-const port = 8080;
+const port = Number(process.env.PORT) || 8080;
+
+const shouldSanitizeEnvForDefine =
+  process.platform === 'win32' && process.env.KEPLER_ESBUILD_SANITIZE_ENV === '1';
+const useLocalDuckdb = process.env.KEPLER_USE_LOCAL_DUCKDB === '1';
+
+const sanitizeEnvForDefine = () => {
+  Object.keys(process.env).forEach(key => {
+    if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key)) {
+      delete process.env[key];
+    }
+  });
+};
+
+if (shouldSanitizeEnvForDefine) {
+  sanitizeEnvForDefine();
+}
 
 const getThirdPartyLibraryAliases = useKeplerNodeModules => {
   const nodeModulesDir = useKeplerNodeModules ? NODE_MODULES_DIR : BASE_NODE_MODULES_DIR;
@@ -155,6 +173,12 @@ function addAliases(externals, args) {
     resolveAlias['@openassistant/osm'] = join(LIB_DIR, '../openassistant/packages/tools/osm/src');
     resolveAlias['@openassistant/utils'] = join(LIB_DIR, '../openassistant/packages/utils/src');
     resolveAlias['@kepler.gl/ai-assistant'] = join(SRC_DIR, 'ai-assistant/src');
+  }
+
+  if (useLocalDuckdb) {
+    resolveAlias['@kepler.gl/duckdb'] = join(SRC_DIR, 'duckdb/src');
+    resolveAlias['@kepler.gl/duckdb/components'] = join(SRC_DIR, 'duckdb/src/components');
+    resolveAlias['@kepler.gl/duckdb/table'] = join(SRC_DIR, 'duckdb/src/table');
   }
 
   // resolve deck.gl from local dir
