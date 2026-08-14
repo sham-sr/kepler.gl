@@ -26,7 +26,8 @@ export default {
     selectType: 'Selecciona un Tipus',
     selectValue: 'Selecciona un Valor',
     enterValue: 'Entra un valor',
-    empty: 'buit'
+    empty: 'buit',
+    selectLayer: 'Selecciona una capa'
   },
   misc: {
     by: '',
@@ -45,17 +46,31 @@ export default {
     water: 'Aigua',
     land: 'Terra',
     '3dBuilding': 'Edifici 3D',
-    background: 'Fons'
+    background: 'Fons',
+    atmosphere: 'Atmosphere',
+    hugeHalo: 'Huge Halo',
+    hugeHaloRadius: 'Halo Radius',
+    hugeHaloOpacity: 'Halo Opacity',
+    basemap: 'Basemap',
+    adminBorders: 'Admin Borders',
+    terminator: 'Day/Night',
+    sunAzimuth: 'Sun Azimuth',
+    surface: 'Globe Surface',
+    stars: 'Stars'
   },
   panel: {
     text: {
       label: 'etiqueta',
       labelWithId: 'Etiqueta {labelId}',
       fontSize: 'Mida de la font',
+      fontWeight: 'Pes de la font',
       fontColor: 'Color de la font',
+      backgroundColor: 'Color de fons',
       textAnchor: 'Àncora del text',
       alignment: 'Alineació',
-      addMoreLabel: 'Afegeix més etiquetes'
+      addMoreLabel: 'Afegeix més etiquetes',
+      outlineWidth: 'Amplada del contorn',
+      outlineColor: 'Color del contorn'
     }
   },
   sidebar: {
@@ -63,11 +78,17 @@ export default {
       layer: 'Capes',
       filter: 'Filtres',
       interaction: 'Interaccions',
-      basemap: 'Mapa base'
+      basemap: 'Mapa base',
+      annotation: 'Anotacions'
+    },
+    panelViewToggle: {
+      list: 'Visualitza Llista',
+      byDataset: 'Visualitza per Conjunt de dades'
     }
   },
   layer: {
     required: 'Requerit*',
+    columnModesSeparator: 'O',
     radius: 'Radi',
     color: 'Color',
     fillColor: 'Color fons',
@@ -82,11 +103,15 @@ export default {
     trailLength: 'Longitud de pista',
     trailLengthDescription: 'Nombre de segons fins que desapareix el camí',
     newLayer: 'nova capa',
-    elevationByDescription: "Si desactivat, l'alçada es basa en el recompte de punts",
+    elevationByDescription: 'Si desactivat, l\'alçada es basa en el recompte de punts',
     colorByDescription: 'Si desactivat, el color es basa en el recompte de punts',
     aggregateBy: '{field} agregat per',
     '3DModel': 'Model 3D',
     '3DModelOptions': 'Opcions del model 3D',
+    service: 'Servei',
+    layer: 'Capa',
+    appearance: 'Aparença',
+    uniqueIdField: 'Camp ID únic',
     type: {
       point: 'punt',
       arc: 'arc',
@@ -102,12 +127,26 @@ export default {
       hexagonid: 'H3',
       trip: 'viatge',
       s2: 'S2',
-      '3d': '3D'
+      '3d': '3D',
+      flow: 'flow',
+      vectortile: 'mosaic vectorial',
+      rastertile: 'mosaic ràster',
+      wms: 'WMS',
+      tile3d: 'mosaic 3D',
+      bitmap: 'bitmap'
     },
-    layerUpdateError:
-      "S'ha produït un error durant l'actualització de la capa: {errorMessage}. Assegureu-vos que el format de les dades d’entrada sigui vàlid.",
+    wms: {
+      hover: 'Valor:'
+    },
+    layerUpdateError: 'S\'ha produït un error durant l\'actualització de la capa: {errorMessage}. Assegureu-vos que el format de les dades d’entrada sigui vàlid.',
+    interaction: 'Interacció',
     heatmap: 'Heatmap',
-    aggregation: 'Aggregation'
+    aggregation: 'Aggregation',
+    '3DModelURL': 'Custom 3D Model URL',
+    '3DModelURLDescription': 'URL of a .glb or .glTF file with the 3D model.',
+    bounds: 'Bounds',
+    imageSource: 'Image Source',
+    alignment: 'Alignment'
   },
   layerVisConfigs: {
     angle: 'Angle',
@@ -123,6 +162,7 @@ export default {
     billboardDescription: 'Orientar la geometria cap a la càmera',
     fadeTrail: 'Rastre de desvaniment',
     opacity: 'Opacitat',
+    pointSize: 'Mida del punt',
     coverage: 'Cobertura',
     outline: 'Outline',
     colorRange: 'Rang de color',
@@ -138,8 +178,7 @@ export default {
     worldUnitSize: 'Mida de la unitat mundial',
     elevationScale: 'Escala elevació',
     enableElevationZoomFactor: 'Utilitzeu el factor de zoom d’elevació',
-    enableElevationZoomFactorDescription:
-      "'Ajusteu l'alçada / elevació en funció del factor de zoom actual",
+    enableElevationZoomFactorDescription: '\'Ajusteu l\'alçada / elevació en funció del factor de zoom actual',
     enableHeightZoomFactor: 'Utilitzeu el factor de zoom d’alçada',
     heightScale: 'Escala alçada',
     coverageRange: 'Rang ed cobertura',
@@ -155,62 +194,168 @@ export default {
     threshold: 'Threshold',
     zoomScale: 'Escala de zoom',
     heightRange: 'Rang alçada',
-    heightMultiplier: "Multiplicador d'alçada",
+    heightMultiplier: 'Multiplicador d\'alçada',
     fixedHeight: 'Alçada fixa',
-    fixedHeightDescription: "Utilitzeu l'alçada sense modificacions",
-    allowHover: "Mostra informació d'eina",
-    allowHoverDescription:
-      "Mostra o oculta la informació d'eina en passar el cursor per sobre de les característiques de la capa"
+    fixedHeightDescription: 'Utilitzeu l\'alçada sense modificacions',
+    allowHover: 'Mostra informació d\'eina',
+    allowHoverDescription: 'Mostra o oculta la informació d\'eina en passar el cursor per sobre de les característiques de la capa',
+    flow: {
+      fade: 'Esvaïment',
+      fadeEnabled: 'Esvaïment',
+      fadeAmount: 'Quantitat d\'esvaïment',
+      display: 'Visualització',
+      renderingMode: 'Estil de línia',
+      renderingModes: {
+        straight: 'Recta',
+        curved: 'Corba',
+        'animated-straight': 'Animada'
+      },
+      adaptiveScalesEnabled: 'Escales adaptatives',
+      clusteringEnabled: 'Agrupació',
+      lineThicknessScale: 'Gruix de línia',
+      lineCurviness: 'Curvatura',
+      locationTotalsEnabled: 'Totals de localització',
+      maxTopFlowsDisplayNum: 'Màxim de fluxos principals'
+    },
+    showNeighborOnHover: 'Ressalta veïns en passar el cursor',
+    showHighlightColor: 'Mostra color de ressaltat',
+    darkModeEnabled: 'Mapa base fosc',
+    transparentBackground: 'Fons transparent',
+    imageUrl: 'Image URL',
+    showBounds: 'Show Bounds',
+    editBounds: 'Drag corners to resize',
+    alignMode: 'Align to map',
+    boundsWest: 'West',
+    boundsSouth: 'South',
+    boundsEast: 'East',
+    boundsNorth: 'North',
+    scenegraphColorEnabled: 'Apply color',
+    scenegraphUseTrailColor: 'Use trail color',
+    adjustRoll: 'Adjust Roll',
+    adjustPitch: 'Adjust Pitch',
+    adjustYaw: 'Adjust Yaw',
+    adjustSize: 'Size Scale',
+    adjustSizeDescription: 'Size is scaled by factor of 2^x where x is the slider value. Zero means no scaling.',
+    invertRoll: 'Invert Roll',
+    invertPitch: 'Invert Pitch',
+    invertYaw: 'Invert Yaw',
+    fixedRoll: 'Roll based on',
+    fixedPitch: 'Pitch based on',
+    fixedYaw: 'Yaw based on',
+    fixedRollDescription: 'Select a column with the values for Roll. Zero is level. Positive is rolled right.',
+    fixedPitchDescription: 'Select a column with the values for Pitch. Zero is level. Positive is Pitch up.',
+    fixedYawDescription: 'Select a column with the values for Yaw. Zero is north. Positive is clockwise from north.'
   },
   layerManager: {
     addData: 'Afegeix Dades',
     addLayer: 'Afegeix Capes',
-    layerBlending: 'Combinar capes'
+    layerBlending: 'Combinar capes',
+    overlayBlending: 'Combinació de superposició',
+    globeUnsupported: '{layerType} layer is not supported in Globe mode'
   },
   mapManager: {
     mapStyle: 'Estil de mapa',
     addMapStyle: 'Afegeix estils de mapa',
     '3dBuildingColor': 'Color edifici 3D',
-    backgroundColor: 'Color de fons'
+    backgroundColor: 'Color de fons',
+    globeLayers: 'Globe Layers'
+  },
+  effectManager: {
+    effects: 'Efectes',
+    addEffect: 'Afegeix efecte',
+    pickDateTime: 'Selecciona data/hora',
+    currentTime: 'Hora actual',
+    pickCurrrentTime: 'Selecciona hora actual',
+    date: 'Data',
+    time: 'Hora',
+    timezone: 'Zona horària'
+  },
+  annotationManager: {
+    title: 'Anotacions',
+    addAnnotation: 'Afegir',
+    type: 'Tipus',
+    lineWidth: 'Amplada de línia',
+    color: 'Color'
+  },
+  effectDescription: {
+    lightAndShadow: 'Simula il·luminació solar realista i ombres basades en l\'hora del dia i la ubicació geogràfica. Intensitat d\'ombra, colors de llum solar i ambiental ajustables.',
+    ink: 'Aplica un estil artístic de tinta que enfosqueix les vores i crea una aparença dibuixada a mà. Ajusta la intensitat per controlar l\'efecte.',
+    brightnessContrast: 'Ajusta la brillantor i el contrast generals del mapa. Utilitza valors positius per augmentar la brillantor o el contrast, valors negatius per enfosquir o aplanar la imatge.',
+    hueSaturation: 'Canvia el to de color i ajusta la saturació de tot el mapa. Útil per crear temes de color o desaturar la vista.',
+    vibrance: 'Augmenta selectivament la intensitat dels colors apagats sense sobresaturar els ja vius. Produeix una millora de color més natural que la saturació.',
+    sepia: 'Aplica un to marró càlid reminiscent de fotografies antigues. Controla la quantitat per barrejar entre els colors originals i l\'aspecte sèpia.',
+    dotScreen: 'Converteix la imatge en un patró de punts monocroms, semblant a la impressió de mitjos tons de diari. Ajusta l\'angle, la mida dels punts i la posició central.',
+    colorHalftone: 'Simula la impressió de mitjos tons de color CMYK amb patrons de punts separats per a cada canal de color. Controla l\'angle, la mida dels punts i la posició central.',
+    noise: 'Afegeix soroll aleatori estil gra de pel·lícula al mapa. Útil per a una estètica texturitzada i analògica o per reduir el banding de color.',
+    triangleBlur: 'Aplica un desenfocament suau de tipus gaussià uniformement al mapa. Controla el radi de desenfocament per ajustar el nivell de suavitat.',
+    zoomBlur: 'Crea un desenfocament de moviment radial que emana d\'un punt central, simulant un zoom de càmera. Ajusta la intensitat i la posició central.',
+    tiltShift: 'Simula un efecte de lent tilt-shift que desenfoca les àrees fora d\'una banda focal, creant un aspecte de maqueta en miniatura. Estableix la banda focal amb posicions d\'inici/fi.',
+    edgeWork: 'Ressalta les vores estructurals de la imatge utilitzant un estil artístic de dibuix al carbó. Ajusta el radi de detecció per controlar el gruix de la línia.',
+    vignette: 'Enfosqueix les cantonades i vores del mapa, dirigint l\'atenció cap al centre. Controla la quantitat d\'enfosquiment i el radi de l\'àrea clara.',
+    magnify: 'Crea una superposició de lupa circular en una posició configurable. Ajusta la mida, el nivell de zoom i l\'amplada de la vora.',
+    hexagonalPixelate: 'Substitueix la imatge per una quadrícula de mosaic hexagonal, cadascun omplert amb el color mitjà de l\'àrea que cobreix. Ajusta l\'escala del mosaic.',
+    distanceFog: 'Desvaneix els objectes llunyans en un color de boira basat en la seva profunditat respecte a la càmera, millorant la sensació de profunditat. Controla la densitat, la distància d\'inici, l\'abast i el color de la boira.',
+    surfaceFog: 'Renderitza una capa de boira a una elevació específica sobre la superfície del terreny. Ajusta l\'elevació, el gruix de transició, la densitat, el color i un patró de soroll opcional.'
   },
   layerConfiguration: {
     defaultDescription: 'Calcula {property} segons el camp seleccionat',
-    howTo: 'How to'
+    howTo: 'Com funciona',
+    showColorChart: 'Mostra gràfic de colors',
+    hideColorChart: 'Amaga gràfic de colors'
   },
   filterManager: {
-    addFilter: 'Afegeix Filtre'
+    addFilter: 'Afegeix Filtre',
+    timeFilterSync: 'Conjunts sincronitzats',
+    timeLayerSync: 'Vincula amb la línia de temps de la capa',
+    timeLayerUnsync: 'Desvincula de la línia de temps de la capa',
+    column: 'Columna'
   },
   datasetTitle: {
     showDataTable: 'Mostra taula de dades',
     removeDataset: 'Elimina conjunt de dades'
   },
   datasetInfo: {
-    rowCount: '{rowCount} files'
+    rowCount: '{rowCount} files',
+    vectorTile: 'Mosaic vectorial',
+    rasterTile: 'Mosaic ràster',
+    wmsTile: 'Mosaic WMS',
+    tile3d: 'Mosaic 3D',
+    bitmap: 'Bitmap image'
   },
   tooltip: {
     hideLayer: 'oculta la capa',
     showLayer: 'mostra la capa',
-    hideFeature: "Amaga l'objecte",
-    showFeature: "Mostra l'objecte",
+    hideFeature: 'Amaga l\'objecte',
+    showFeature: 'Mostra l\'objecte',
     hide: 'amaga',
     show: 'mostra',
     removeLayer: 'Elimina capa',
+    duplicateLayer: 'Duplica capa',
+    zoomToLayer: 'Zoom a la capa',
     resetAfterError: 'Intenteu habilitar la capa després dun error',
     layerSettings: 'Configuració de capa',
     closePanel: 'Tanca panel actual',
     switchToDualView: 'Canvia a la vista de mapa dual',
+    selectSplitMode: 'Selecciona el mode de vista del mapa',
+    singleView: 'Únic',
+    dualView: 'Doble',
+    swipeView: 'Comparar',
     showLegend: 'mostra llegenda',
     disable3DMap: 'Desactiva mapa 3D',
     DrawOnMap: 'Dibuixa al mapa',
     selectLocale: 'Selecciona configuració regional',
+    switchToLightTheme: 'Canvia al tema clar',
+    switchToDarkTheme: 'Canvia al tema fosc',
     showAiAssistantPanel: 'Mostra el tauler de AI Assistant',
     hideAiAssistantPanel: 'Oculta el tauler de AI Assistant',
     hideLayerPanel: 'Oculta el tauler de capes',
     showLayerPanel: 'Mostra el tauler de capes',
     moveToTop: 'Desplaça a dalt de tot de les capes de dades',
     selectBaseMapStyle: 'Selecciona estil de mapa base',
+    removeBaseMapStyle: 'Elimina estil de mapa base',
     delete: 'Esborra',
     timePlayback: 'Reproducció de temps',
+    timeFilterSync: 'Sincronitza amb una columna d\'un altre conjunt de dades',
     cloudStorage: 'Emmagatzematge al núvol',
     '3DMap': 'Mapa 3D',
     animationByWindow: 'Finestra Temporal Mòbil',
@@ -219,12 +364,33 @@ export default {
     play: 'iniciar',
     pause: 'pausar',
     reset: 'reiniciar',
-    export: 'exportar'
+    export: 'exportar',
+    timeLayerSync: 'Vincula amb la línia de temps de la capa',
+    timeLayerUnsync: 'Desvincula de la línia de temps de la capa',
+    syncTimelineStart: 'Inici del període de temps del filtre actual',
+    syncTimelineEnd: 'Fi del període de temps del filtre actual',
+    showEffectPanel: 'Mostra el panell d\'efectes',
+    hideEffectPanel: 'Amaga el panell d\'efectes',
+    showAnnotationPanel: 'Mostra les anotacions',
+    hideAnnotationPanel: 'Amaga les anotacions',
+    removeAnnotation: 'Elimina l\'anotació',
+    duplicateAnnotation: 'Duplica l\'anotació',
+    hideAnnotation: 'Amaga l\'anotació',
+    showAnnotation: 'Mostra l\'anotació',
+    annotationSettings: 'Configuració de l\'anotació',
+    removeEffect: 'Elimina l\'efecte',
+    disableEffect: 'Desactiva l\'efecte',
+    effectSettings: 'Configuració de l\'efecte',
+    globeMap: 'Globe Map',
+    disableGlobeMap: 'Disable Globe Map',
+    viewMode: 'View Mode',
+    top: 'Top'
   },
   toolbar: {
     exportImage: 'Exporta imatge',
     exportData: 'Exporta dades',
     exportMap: 'Exporta mapa',
+    exportVideo: 'Exporta Vídeo',
     shareMapURL: 'Comparteix URL del mapa',
     saveMap: 'Desa mapa',
     select: 'selecciona',
@@ -233,6 +399,16 @@ export default {
     hide: 'amaga',
     show: 'mostra',
     ...LOCALES
+  },
+  editor: {
+    filterLayer: 'Filtra capes',
+    filterLayerDisabled: 'Les geometries no poligonals no es poden utilitzar per filtrar',
+    copyGeometry: 'Copia geometria',
+    noLayersToFilter: 'No hi ha capes per filtrar'
+  },
+  exportVideoModal: {
+    animation: 'Animació',
+    settings: 'Configuració'
   },
   modal: {
     title: {
@@ -243,7 +419,8 @@ export default {
       exportMap: 'Exporta mapa',
       addCustomMapboxStyle: 'Afegeix estil Mapbox propi',
       saveMap: 'Desa mapa',
-      shareURL: 'Comparteix URL'
+      shareURL: 'Comparteix URL',
+      exportVideo: 'Exporta Vídeo'
     },
     button: {
       delete: 'Esborra',
@@ -267,6 +444,10 @@ export default {
       mapLegendTitle: 'Llegenda del mapa',
       mapLegendAdd: 'Afegir llegenda al mapa'
     },
+    exportVideo: {
+      animation: 'Animació',
+      settings: 'Configuració'
+    },
     exportData: {
       datasetTitle: 'Conjunt de dades',
       datasetSubtitle: 'Escull els conjunts de dades que vols exportar',
@@ -278,35 +459,37 @@ export default {
       filteredData: 'Dades filtrades',
       unfilteredData: 'Dades sense filtrar',
       fileCount: '{fileCount} Arxius',
-      rowCount: '{rowCount} Files'
+      rowCount: '{rowCount} files',
+      tiledDatasetWarning: '* L\'exportació de dades per a conjunts de dades en mosaic no és compatible'
     },
     deleteData: {
-      warning: "estàs a punt d'esborrar aquest conjunt de dades. Afectarà {length} capes"
+      warning: 'estàs a punt d\'esborrar aquest conjunt de dades. Afectarà {length} capes'
     },
     addStyle: {
-      publishTitle: "2. Publica el teu estil a Mapbox o proporciona el token d'accés",
+      publishTitle: '2. Publica el teu estil a Mapbox o proporciona el token d\'accés',
       publishSubtitle1: 'Pots crear el teu propi estil de mapa a',
       publishSubtitle2: 'i',
       publishSubtitle3: 'publicar',
       publishSubtitle4: 'ho.',
       publishSubtitle5: 'Per utilitzar un estil privat, enganxa el teu',
-      publishSubtitle6: "token d'accés",
-      publishSubtitle7:
-        'aquí. *kepler.gl és una aplicació client, les dades romanen al teu navegador..',
+      publishSubtitle6: 'token d\'accés',
+      publishSubtitle7: 'aquí. *kepler.gl és una aplicació client, les dades romanen al teu navegador..',
       exampleToken: 'p.ex. pk.abcdefg.xxxxxx',
-      pasteTitle: "1. Enganxa la URL de l'estil",
+      pasteTitle: '1. Enganxa la URL de l\'estil',
+      pasteSubtitle0: 'La URL de l\'estil pot ser una URL de Mapbox',
       pasteSubtitle1: 'Què és un',
-      pasteSubtitle2: "URL de l'estil",
+      pasteSubtitle2: 'URL de l\'estil',
+      pasteSubtitle3: 'o un style.json que utilitzi l\'',
+      pasteSubtitle4: 'especificació d\'estil de Mapbox GL',
       namingTitle: '3. Posa nom al teu estil'
     },
     shareMap: {
+      title: 'Comparteix mapa',
       shareUriTitle: 'Comparteix URL del mapa',
       shareUriSubtitle: 'Genera una URL del mapa per compartir amb altri',
       cloudTitle: 'Emmagatzematge al núvol',
       cloudSubtitle: 'Accedeix i carrega dades de mapa al teu emmagatzematge al núvol personal',
-      shareDisclaimer:
-        'kepler.gl desarà les dades del mapa al teu emmagatzematge al núvol personal, només qui tingui la URL podrà accedir al mapa i a les dades . ' +
-        "Pots editar/esborrar l'arxiu de dades en el teu compte al núvol en qualsevol moment.",
+      shareDisclaimer: 'kepler.gl desarà les dades del mapa al teu emmagatzematge al núvol personal, només qui tingui la URL podrà accedir al mapa i a les dades . Pots editar/esborrar l\'arxiu de dades en el teu compte al núvol en qualsevol moment.',
       gotoPage: 'Ves a la pàgina de {currentProvider} de Kepler.gl'
     },
     statusPanel: {
@@ -322,13 +505,12 @@ export default {
       formatSubtitle: 'Escull el format amb què vols exportar el teu mapa',
       html: {
         selection: 'Exporta el teu mapa com un arxiu HTML interactiu.',
-        tokenTitle: "Token d'accés de Mapbox",
-        tokenSubtitle: "Utilitza el teu token d'accés de Mapbox a l'arxiu HTML (opcional)",
-        tokenPlaceholder: "Enganxa el teu token d'accés a Mapbox",
-        tokenMisuseWarning:
-          '* Si no proporciones el teu propi token, el mapa podria fallar en qualsevol moment quan reemplacem el nostre token per evitar abusos. ',
-        tokenDisclaimer:
-          'Pots canviar el toke de Mapbox més endavant fent servir aquestes instruccions: ',
+        tokenTitle: 'Token d\'accés de Mapbox',
+        tokenSubtitle: 'Utilitza el teu token d\'accés de Mapbox a l\'arxiu HTML (opcional)',
+        tokenPlaceholder: 'Enganxa el teu token d\'accés a Mapbox',
+        tokenMisuseWarning: '* Si no proporciones el teu propi token, el mapa podria fallar en qualsevol moment quan reemplacem el nostre token per evitar abusos. ',
+        tokenSecurityWarning: '* Avís: el vostre token de Mapbox s\'incrustarà al fitxer HTML exportat. Qualsevol persona amb accés a aquest fitxer podrà veure i utilitzar el vostre token. Utilitzeu un token amb restriccions d\'URL quan sigui possible. ',
+        tokenDisclaimer: 'Pots canviar el toke de Mapbox més endavant fent servir aquestes instruccions: ',
         tokenUpdate: 'Com actualitzar un token preexistent.',
         modeTitle: 'Mode mapa',
         modeSubtitle1: 'Selecciona mode app. Més ',
@@ -339,13 +521,9 @@ export default {
       },
       json: {
         configTitle: 'Configuració del mapa',
-        configDisclaimer:
-          "La configuració del mapa s'inclourà a l'arxiu Json. Si utilitzes kepler.gl a la teva pròpia app pots copiar aquesta configuració i passar-la a  ",
-        selection:
-          'Exporta les dades del mapa i la configuració en un sol arxiu Json. Més endavant pots obrir aquest mateix mapa carregant aquest mateix arxiu a kepler.gl.',
-        disclaimer:
-          "* La configuració del mapa es combina amb els conjunts de dades carregats. ‘dataId’ s'utilitza per lligar capes, filtres i suggeriments a un conjunt de dades específic. " +
-          "Quan passis aquesta configuració a addDataToMap, assegura que l'identificador del conjunt de dades coincideixi amb els ‘dataId’ d'aquesta configuració."
+        configDisclaimer: 'La configuració del mapa s\'inclourà a l\'arxiu Json. Si utilitzes kepler.gl a la teva pròpia app pots copiar aquesta configuració i passar-la a  ',
+        selection: 'Exporta les dades del mapa i la configuració en un sol arxiu Json. Més endavant pots obrir aquest mateix mapa carregant aquest mateix arxiu a kepler.gl.',
+        disclaimer: '* La configuració del mapa es combina amb els conjunts de dades carregats. ‘dataId’ s\'utilitza per lligar capes, filtres i suggeriments a un conjunt de dades específic. Quan passis aquesta configuració a addDataToMap, assegura que l\'identificador del conjunt de dades coincideixi amb els ‘dataId’ d\'aquesta configuració.'
       }
     },
     loadingDialog: {
@@ -353,25 +531,99 @@ export default {
     },
     loadData: {
       upload: 'Carregar arxius',
-      storage: "Carregar des d'emmagatzematge"
+      tileset: 'Conjunt de mosaic',
+      storage: 'Carregar des d\'emmagatzematge'
     },
     tripInfo: {
       title: 'Com habilitar l’animació de viatge',
-      description1:
-        'Per animar la ruta, les dades geoJSON han de contenir `LineString` en la seva geometria i les coordenades de LineString han de tenir 4 elements en els formats de ',
+      description1: `Per animar la ruta, les dades geoJSON han de contenir \`LineString\` en la seva geometria i les coordenades de LineString han de tenir 4 elements en els formats de `,
       code: ' [longitude, latitude, altitude, timestamp] ',
-      description2:
-        'i el darrer element ha de ser la marca de temps. Els formats vàlids per a la marca de temps inclouen Unix en segons com `1564184363` o en milisegons com `1564184363000`.',
-      example: 'Exemple:'
+      description2: `i el darrer element ha de ser la marca de temps. Els formats vàlids per a la marca de temps inclouen Unix en segons com \`1564184363\` o en milisegons com \`1564184363000\`.`,
+      example: 'Exemple:',
+      titleTable: 'Crear viatges a partir d\'una llista de punts',
+      descriptionTable1: 'Els viatges es poden crear unint una llista de punts de latitud i longitud, ordenant per marques de temps i agrupant per identificadors únics.',
+      exampleTable: 'Example Csv'
     },
     iconInfo: {
       title: 'Com dibuixar icones',
-      description1:
-        "En el teu CSV crea una columna i posa-hi el nom de la icona que vols dibuixar. Pots deixar la cel·la buida quan no vulguis que es mostri per a certs punts. Quan la columna s'anomena",
+      description1: 'En el teu CSV crea una columna i posa-hi el nom de la icona que vols dibuixar. Pots deixar la cel·la buida quan no vulguis que es mostri per a certs punts. Quan la columna s\'anomena',
       code: 'icon',
-      description2: " kepler.gl automàticament crearà una capa d'icona.",
+      description2: ' kepler.gl automàticament crearà una capa d\'icona.',
       example: 'Exemple:',
       icons: 'Icones'
+    },
+    polygonInfo: {
+      title: 'Crear capa de polígons a partir de funcions GeoJSON',
+      titleTable: 'Crear camí a partir de punts',
+      descriptionTable: `Els camins es poden crear unint una llista de punts de latitud i longitud, ordenant per un camp d'índex (p.ex. marca de temps) i agrupant per identificadors únics.
+
+  ### Columnes de la capa:
+  - **id**: - *obligatori*&nbsp;- Una columna \`id\` s'utilitza per agrupar punts. Els punts amb el mateix id s'uniran en un únic camí.
+  - **lat**: - *obligatori*&nbsp;- La latitud del punt
+  - **lon**: - *obligatori*&nbsp;- La longitud del punt
+  - **alt**: - *opcional*&nbsp;- L'altitud del punt
+  - **sort by**: - *opcional*&nbsp;- Una columna \`sort by\` s'utilitza per ordenar els punts; si no s'especifica, els punts s'ordenaran per índex de fila.
+`,
+      exampleTable: 'Example CSV',
+      description: `Polygon can be created from
+__1 .A GeoJSON Feature Collection__
+__2. A Csv contains geometry column__
+
+### 1. Create polygon from GeoJSON file
+
+When upload a GeoJSON file contains FeatureCollection, a polygon layer will be auto-created
+
+Example GeoJSON
+\`\`\`json
+{
+  "type": "FeatureCollection",
+  "features": [{
+      "type": "Feature",
+      "geometry": {
+          "type": "Point",
+          "coordinates": [102.0, 0.5]
+      },
+      "properties": {
+          "prop0": "value0"
+      }
+  }, {
+      "type": "Feature",
+      "geometry": {
+          "type": "LineString",
+          "coordinates": [
+              [102.0, 0.0],
+              [103.0, 1.0],
+              [104.0, 0.0],
+              [105.0, 1.0]
+          ]
+      },
+      "properties": {
+        "prop0": "value0"
+      }
+  }]
+}
+\`\`\`
+
+### 2. Create polygon from a Geometry column in Csv table
+Geometries (Polygons, Points, LindStrings etc) can be embedded into CSV as a \`GeoJSON\` or \`WKT\` formatted string.
+
+#### 2.1 \`GeoJSON\` string
+Example data.csv with \`GeoJSON\` string
+\`\`\`txt
+id,_geojson
+1,"{""type"":""Polygon"",""coordinates"":[[[-74.158491,40.835947],[-74.157914,40.83902]]]}"
+\`\`\`
+
+#### 2.2 \`WKT\` string
+Example data.csv with \`WKT\` string
+[The Well-Known Text (WKT)](https://dev.mysql.com/doc/refman/5.7/en/gis-data-formats.html#gis-wkt-format) representation of geometry values is designed for exchanging geometry data in ASCII form.
+
+Example data.csv with WKT
+\`\`\`txt
+id,_geojson
+1,"POLYGON((0 0,10 0,10 10,0 10,0 0),(5 5,7 5,7 7,5 7, 5 5))"
+\`\`\`
+`
     },
     storageMapViewer: {
       lastModified: 'Darrera modificació fa {lastUpdated}',
@@ -385,12 +637,14 @@ export default {
       back: 'Enrere',
       goToPage: 'Ves a la pàgina {displayName} de Kepler.gl',
       storageMaps: 'Emmagatzematge / Mapes',
-      noSavedMaps: 'Cap mapa desat encara'
+      noSavedMaps: 'Cap mapa desat encara',
+      foursquareStorageMessage: 'Només es mostren aquí els mapes desats amb l\'opció Kepler.gl > Desar > Emmagatzematge de Foursquare'
     }
   },
   header: {
     visibleLayers: 'Capes visibles',
-    layerLegend: 'Llegenda de capes'
+    layerLegend: 'Llegenda de capes',
+    annotations: 'Anotacions'
   },
   interactions: {
     tooltip: 'Suggeriment',
@@ -404,13 +658,29 @@ export default {
     normal: 'normal',
     subtractive: 'substractiva'
   },
+  overlayBlending: {
+    title: 'Combinació de superposició del mapa',
+    description: 'Combina les capes amb el mapa base perquè ambdós siguin visibles.',
+    screen: 'mapa base fosc',
+    normal: 'normal',
+    darken: 'mapa base clar'
+  },
   columns: {
     title: 'Columnes',
     lat: 'lat',
     lng: 'lon',
     altitude: 'alçada',
+    alt: 'altitud',
+    id: 'id',
+    timestamp: 'temps',
     icon: 'icona',
     geojson: 'geojson',
+    geoarrow: 'geoarrow',
+    geoarrow0: 'geoarrow origen',
+    geoarrow1: 'geoarrow destinació',
+    token: 'token',
+    sortBy: 'ordenar per',
+    neighbors: 'veïns',
     arc: {
       lat0: 'lat origen',
       lng0: 'lng origen ',
@@ -425,38 +695,60 @@ export default {
       worldUnitSize: 'Mida de malla (km)'
     },
     hexagon: {
-      worldUnitSize: "Radi d'hexàgon (km)"
+      worldUnitSize: 'Radi d\'hexàgon (km)'
     },
-    hex_id: 'id hex'
+    hex_id: 'id hex',
+    flow: {
+      source: {
+        lat: 'lat origen',
+        lng: 'lng origen',
+        name: 'nom origen',
+        h3: 'H3 origen'
+      },
+      target: {
+        lat: 'lat destinació',
+        lng: 'lng destinació',
+        name: 'nom destinació',
+        h3: 'H3 destinació'
+      },
+      count: 'recompte'
+    }
   },
   color: {
     customPalette: 'Paleta personalitzada',
     steps: 'intervals',
     type: 'tipus',
-    reversed: 'invertida'
+    colorBlindSafe: 'Segur per a daltònics',
+    reversed: 'invertida',
+    disableStepReason: 'No es pot canviar el nombre de passos amb talls de color personalitzats, utilitza la paleta personalitzada per editar els passos',
+    preset: 'Colors predefinits',
+    picker: 'Selector de color'
   },
   scale: {
     colorScale: 'Escala de color',
     sizeScale: 'Escala de mides',
     strokeScale: 'Escala de traç',
+    strokeColorScale: 'Escala de color de traç',
     scale: 'Escala'
   },
   fileUploader: {
-    message: "Arrossega i deixa anar l'arxiu aquí",
-    chromeMessage:
-      '*usuari de Chrome: la mida màxima són 250mb, si has de carrgar un arxiu més gran fes servir Safari',
-    disclaimer:
-      '*kepler.gl és una aplicació a la banda client que no es recolza en cap servidor. Les dades només existeixen a la teva màquina/navegador. ' +
-      "No s'envien dades ni mapes a cap servidor.",
-    configUploadMessage:
-      'Carrega {fileFormatNames} o un mapa desat en **Json**. Més informació sobre [**supported file formats**]',
+    message: 'Arrossega i deixa anar l\'arxiu aquí',
+    chromeMessage: '*usuari de Chrome: la mida màxima són 250mb, si has de carrgar un arxiu més gran fes servir Safari',
+    disclaimer: '*kepler.gl és una aplicació a la banda client que no es recolza en cap servidor. Les dades només existeixen a la teva màquina/navegador. No s\'envien dades ni mapes a cap servidor.',
+    configUploadMessage: 'Carrega {fileFormatNames} o un mapa desat en **Json**. Més informació sobre [**supported file formats**]',
     browseFiles: 'navega pels teus arxius',
     uploading: 'Carregant',
-    fileNotSupported: "L'arxiu {errorFiles} no és compatible.",
+    fileNotSupported: 'L\'arxiu {errorFiles} no és compatible.',
     or: 'o'
   },
+  tilesetSetup: {
+    header: 'Configurar mosaics vectorials',
+    rasterTileHeader: 'Configurar mosaics ràster',
+    addTilesetText: 'Afegir conjunt de mosaic'
+  },
   geocoder: {
-    title: 'Introdueix una adreça'
+    title: 'Introdueix una adreça',
+    limitSearch: 'Limit Search to Viewport'
   },
   fieldSelector: {
     clearAll: 'Treure tots',
@@ -474,10 +766,55 @@ export default {
     primary: 'Principal'
   },
   density: 'densitat',
-  'Bug Report': "Informe d'errors",
-  'User Guide': "Guia d'usuari",
+  'Bug Report': 'Informe d\'errors',
+  'User Guide': 'Guia d\'usuari',
   Save: 'Desa',
   Share: 'Comparteix',
+  flow: {
+    tooltip: {
+      location: {
+        name: 'Nom',
+        incomingCount: 'Entrants',
+        outgoingCount: 'Sortints',
+        internalCount: 'Interns'
+      },
+      flow: {
+        sourceName: 'Origen',
+        targetName: 'Destinació',
+        count: 'Recompte'
+      }
+    }
+  },
+  mapLegend: {
+    layers: {
+      line: {
+        singleColor: {
+          sourceColor: 'Origen',
+          targetColor: 'Destinació'
+        }
+      },
+      arc: {
+        singleColor: {
+          sourceColor: 'Origen',
+          targetColor: 'Destinació'
+        }
+      },
+      default: {
+        singleColor: {
+          color: 'Color de farciment',
+          strokeColor: 'Contorn',
+          sourceColor: 'Source',
+          targetColor: 'Target'
+        }
+      },
+      point: {
+        singleColor: {
+          color: 'Fill color',
+          strokeColor: 'Outline'
+        }
+      }
+    }
+  },
   dataTable: {
     displayFormat: {
       setIntegerNumberFormat: 'Format de nombres enters',
@@ -486,5 +823,6 @@ export default {
       setDateFormat: 'Format de data',
       setBooleanFormat: 'Format booleà'
     }
-  }
+  },
+  'Update color': 'Update color'
 };

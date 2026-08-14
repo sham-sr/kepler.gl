@@ -92,7 +92,7 @@ const DEFAULT_PROPS = {
     mediaType: 'webm',
     cameraPreset: 'None',
     fileName: 'kepler.gl',
-    resolution: '',
+    resolution: '1280x720',
     durationMs: 1000
   },
   containerW: 800,
@@ -158,6 +158,7 @@ describe('ExportVideoModal', () => {
       parameters: {blend: true},
       controller: true,
       views: {},
+      _isExport: true,
       effects: []
     });
   });

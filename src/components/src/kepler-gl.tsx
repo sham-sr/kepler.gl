@@ -188,6 +188,7 @@ export const mapFieldsSelector = (props: KeplerGLProps, index = 0) => {
     mapControls: props.uiState.mapControls,
     readOnly: props.uiState.readOnly,
     locale: props.uiState.locale,
+    uiTheme: props.uiState.theme,
     isLoadingIndicatorVisible: Number(props.visState.loadingIndicatorValue) > 0,
     sidePanelWidth: props.sidePanelWidth ? props.sidePanelWidth : DEFAULT_KEPLER_GL_PROPS.width,
 
@@ -196,7 +197,9 @@ export const mapFieldsSelector = (props: KeplerGLProps, index = 0) => {
     bottomMapContainerProps: props.bottomMapContainerProps,
 
     // transformRequest for Mapbox basemaps
-    transformRequest: props.transformRequest
+    transformRequest: props.transformRequest,
+
+    RTLTextPlugin: props.RTLTextPlugin
   };
 };
 
@@ -210,6 +213,7 @@ export const sidePanelSelector = (props: KeplerGLProps, availableProviders, filt
   version: props.version ? props.version : DEFAULT_KEPLER_GL_PROPS.version,
   appWebsite: props.appWebsite,
   mapStyle: props.mapStyle,
+  mapState: props.mapState,
   onSaveMap: props.onSaveMap,
   uiState: props.uiState,
   mapStyleActions: props.mapStyleActions,
@@ -302,7 +306,8 @@ export const geoCoderPanelSelector = (
   updateVisData: props.visStateActions.updateVisData,
   removeDataset: props.visStateActions.removeDataset,
   updateMap: props.mapStateActions.updateMap,
-  appWidth: dimensions.width
+  appWidth: dimensions.width,
+  limitSearch: props.visState.interactionConfig.geocoder.config?.limitSearch ?? false
 });
 
 /**
@@ -466,6 +471,9 @@ type KeplerGLBasicProps = {
   bottomMapContainerProps?: object;
 
   transformRequest?: (url: string) => {url: string};
+
+  /** Pass `false` to disable the remote RTL text plugin, or a URL string to self-host it. */
+  RTLTextPlugin?: string | false;
 };
 
 type KeplerGLProps = KeplerGlState & KeplerGlActions & KeplerGLBasicProps;
@@ -534,22 +542,36 @@ function KeplerGlFactory(
 
     static contextType = RootContext;
 
-    root = createRef<HTMLDivElement>();
+    root = createRef<HTMLDivElement | null>();
     bottomWidgetRef = createRef<HTMLDivElement>();
 
     /* selectors */
     themeSelector = props => props.theme;
-    availableThemeSelector = createSelector(this.themeSelector, theme =>
-      typeof theme === 'object'
-        ? {
+    uiThemeSelector = props => props.uiState?.theme;
+    availableThemeSelector = createSelector(
+      this.themeSelector,
+      this.uiThemeSelector,
+      (theme, uiTheme) => {
+        // When theme toggle is enabled, uiState.theme drives light/dark switching.
+        const themeInput = getApplicationConfig().enableThemeToggle
+          ? uiTheme || THEME.dark
+          : theme;
+
+        if (typeof themeInput === 'object' && themeInput !== null) {
+          return {
             ...basicTheme,
-            ...theme
-          }
-        : theme === THEME.light
-        ? themeLT
-        : theme === THEME.base
-        ? themeBS
-        : theme
+            ...themeInput
+          };
+        }
+        if (themeInput === THEME.light) {
+          return themeLT;
+        }
+        if (themeInput === THEME.base) {
+          return themeBS;
+        }
+        // THEME.dark and unknown values fall back to the default dark theme
+        return basicTheme;
+      }
     );
 
     datasetsSelector = props => props.visState.datasets;
@@ -681,7 +703,11 @@ function KeplerGlFactory(
                       <NotificationPanel {...notificationPanelFields} />
                       <DndContext visState={visState}>
                         {!uiState.readOnly && !readOnly && <SidePanel {...sideFields} />}
-                        <MapsLayout className="maps" mapState={this.props.mapState}>
+                        <MapsLayout
+                          className="maps"
+                          mapState={this.props.mapState}
+                          onSetSwipeComparePercentage={this.props.mapStateActions.setSwipeComparePercentage}
+                        >
                           {mapContainers}
                         </MapsLayout>
                       </DndContext>

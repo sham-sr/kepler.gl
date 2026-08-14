@@ -26,7 +26,8 @@ export default {
     selectType: 'タイプを選択',
     selectValue: '値を選択',
     enterValue: '値を入力',
-    empty: '未選択'
+    empty: '未選択',
+    selectLayer: 'レイヤを選択'
   },
   misc: {
     by: '',
@@ -45,17 +46,31 @@ export default {
     water: '水',
     land: '地面',
     '3dBuilding': '3D建物',
-    background: '背景'
+    background: '背景',
+    atmosphere: 'Atmosphere',
+    hugeHalo: 'Huge Halo',
+    hugeHaloRadius: 'Halo Radius',
+    hugeHaloOpacity: 'Halo Opacity',
+    basemap: 'Basemap',
+    adminBorders: 'Admin Borders',
+    terminator: 'Day/Night',
+    sunAzimuth: 'Sun Azimuth',
+    surface: 'Globe Surface',
+    stars: 'Stars'
   },
   panel: {
     text: {
       label: 'ラベル',
       labelWithId: 'ラベル {labelId}',
       fontSize: '文字サイズ',
+      fontWeight: 'フォントの太さ',
       fontColor: '文字色',
       textAnchor: '文字左右',
       alignment: '文字上下',
-      addMoreLabel: 'ラベルを追加'
+      addMoreLabel: 'ラベルを追加',
+      backgroundColor: '背景色',
+      outlineWidth: '輪郭線の幅',
+      outlineColor: '輪郭線の色'
     }
   },
   sidebar: {
@@ -63,7 +78,12 @@ export default {
       layer: 'レイヤ',
       filter: 'フィルター',
       interaction: 'インタラクション',
-      basemap: 'ベースマップ'
+      basemap: 'ベースマップ',
+      annotation: 'アノテーション'
+    },
+    panelViewToggle: {
+      list: 'リスト表示',
+      byDataset: 'データセット別表示'
     }
   },
   layer: {
@@ -87,6 +107,11 @@ export default {
     aggregateBy: '{field}を以下で集計: ',
     '3DModel': '3Dモデル',
     '3DModelOptions': '3Dモデルのオプション',
+    columnModesSeparator: 'または',
+    service: 'サービス',
+    layer: 'レイヤ',
+    appearance: '外観',
+    uniqueIdField: '一意IDフィールド',
     type: {
       point: 'point',
       arc: 'arc',
@@ -102,10 +127,26 @@ export default {
       hexagonid: 'H3',
       trip: 'trip',
       s2: 'S2',
-      '3d': '3D'
+      '3d': '3D',
+      flow: 'flow',
+      vectortile: 'vector tile',
+      rastertile: 'raster tile',
+      wms: 'WMS',
+      tile3d: '3D tile',
+      bitmap: 'bitmap'
     },
+    wms: {
+      hover: 'Value:'
+    },
+    layerUpdateError: 'レイヤ更新中にエラーが発生しました: {errorMessage}。入力データの形式が正しいことを確認してください。',
+    interaction: 'インタラクション',
     heatmap: 'Heatmap',
-    aggregation: 'Aggregation'
+    aggregation: 'Aggregation',
+    '3DModelURL': 'Custom 3D Model URL',
+    '3DModelURLDescription': 'URL of a .glb or .glTF file with the 3D model.',
+    bounds: 'Bounds',
+    imageSource: 'Image Source',
+    alignment: 'Alignment'
   },
   layerVisConfigs: {
     angle: '角度',
@@ -156,32 +197,130 @@ export default {
     fixedHeight: '固定高さ',
     fixedHeightDescription: '高さを変更せずに使用する',
     allowHover: 'ツールチップを表示',
-    allowHoverDescription: 'レイヤー要素にホバーしたときにツールチップを表示または非表示にする'
+    allowHoverDescription: 'レイヤー要素にホバーしたときにツールチップを表示または非表示にする',
+    flow: {
+      fade: 'フェード',
+      fadeEnabled: 'フェード',
+      fadeAmount: 'フェード量',
+      display: '表示',
+      renderingMode: 'ラインスタイル',
+      renderingModes: {
+        straight: 'ストレート',
+        curved: 'カーブ',
+        'animated-straight': 'アニメーション'
+      },
+      adaptiveScalesEnabled: 'アダプティブスケール',
+      clusteringEnabled: 'クラスタリング',
+      lineThicknessScale: '線の太さ',
+      lineCurviness: '曲がり具合',
+      locationTotalsEnabled: 'ロケーション合計',
+      maxTopFlowsDisplayNum: '最大表示フロー数'
+    },
+    showNeighborOnHover: 'ホバー時に隣接要素をハイライト',
+    showHighlightColor: 'ハイライトカラーを表示',
+    darkModeEnabled: 'ダークベースマップ',
+    transparentBackground: '透明な背景',
+    pointSize: 'ポイントサイズ',
+    imageUrl: 'Image URL',
+    showBounds: 'Show Bounds',
+    editBounds: 'Drag corners to resize',
+    alignMode: 'Align to map',
+    boundsWest: 'West',
+    boundsSouth: 'South',
+    boundsEast: 'East',
+    boundsNorth: 'North',
+    scenegraphColorEnabled: 'Apply color',
+    scenegraphUseTrailColor: 'Use trail color',
+    adjustRoll: 'Adjust Roll',
+    adjustPitch: 'Adjust Pitch',
+    adjustYaw: 'Adjust Yaw',
+    adjustSize: 'Size Scale',
+    adjustSizeDescription: 'Size is scaled by factor of 2^x where x is the slider value. Zero means no scaling.',
+    invertRoll: 'Invert Roll',
+    invertPitch: 'Invert Pitch',
+    invertYaw: 'Invert Yaw',
+    fixedRoll: 'Roll based on',
+    fixedPitch: 'Pitch based on',
+    fixedYaw: 'Yaw based on',
+    fixedRollDescription: 'Select a column with the values for Roll. Zero is level. Positive is rolled right.',
+    fixedPitchDescription: 'Select a column with the values for Pitch. Zero is level. Positive is Pitch up.',
+    fixedYawDescription: 'Select a column with the values for Yaw. Zero is north. Positive is clockwise from north.'
   },
   layerManager: {
     addData: 'データ追加',
     addLayer: 'レイヤ追加',
-    layerBlending: 'レイヤのブレンド'
+    layerBlending: 'レイヤのブレンド',
+    overlayBlending: 'オーバーレイブレンド',
+    globeUnsupported: '{layerType} layer is not supported in Globe mode'
   },
   mapManager: {
     mapStyle: 'マップスタイル',
     addMapStyle: 'マップスタイル追加',
     '3dBuildingColor': '3D建物の色',
-    backgroundColor: '背景色'
+    backgroundColor: '背景色',
+    globeLayers: 'Globe Layers'
+  },
+  effectManager: {
+    effects: 'エフェクト',
+    addEffect: 'エフェクトを追加',
+    pickDateTime: '日時を選択',
+    currentTime: '現在時刻',
+    pickCurrrentTime: '現在時刻を選択',
+    date: '日付',
+    time: '時刻',
+    timezone: 'タイムゾーン'
+  },
+  annotationManager: {
+    title: 'アノテーション',
+    addAnnotation: '追加',
+    type: 'タイプ',
+    lineWidth: '線幅',
+    color: '色'
+  },
+  effectDescription: {
+    lightAndShadow: '時刻と地理的位置に基づいてリアルな太陽光と影の投影をシミュレートします。影の強さ、太陽光と環境光の色を調整できます。',
+    ink: '縁を暗くして手描きの外観を作成する水墨画風のアートスタイルを適用します。強度を調整して効果の程度を制御します。',
+    brightnessContrast: 'マップ全体の明るさとコントラストを調整します。正の値で明るさやコントラストを上げ、負の値で暗くしたり平坦化します。',
+    hueSaturation: '色相を変更し、マップ全体の彩度を調整します。カラーテーマの作成やビューの彩度を下げるのに便利です。',
+    vibrance: '既に鮮やかな色を過度に飽和させることなく、くすんだ色の強度を選択的に高めます。彩度よりも自然な色の向上を生み出します。',
+    sepia: '古い写真を思わせる温かみのある茶色のトーンを適用します。元の色とセピア調の間のブレンド量を制御します。',
+    dotScreen: '画像をモノクロのドットパターンに変換し、新聞のハーフトーン印刷に似た効果を出します。角度、ドットサイズ、中心位置を調整します。',
+    colorHalftone: '各カラーチャンネルに個別のドットパターンを使用してCMYKカラーハーフトーン印刷をシミュレートします。角度、ドットサイズ、中心位置を制御します。',
+    noise: 'マップ全体にフィルムグレインスタイルのランダムノイズを追加します。テクスチャのあるアナログ的な美観の作成やカラーバンディングの軽減に便利です。',
+    triangleBlur: 'マップ全体に滑らかなガウシアン風のブラーを均一に適用します。ブラー半径を制御してソフトさのレベルを調整します。',
+    zoomBlur: '中心点から放射状に広がるモーションブラーを作成し、カメラズームをシミュレートします。強度と中心位置を調整します。',
+    tiltShift: 'フォーカルバンドの外側の領域をぼかすティルトシフトレンズ効果をシミュレートし、ミニチュアモデルのような外観を作成します。開始/終了位置でフォーカルバンドを設定します。',
+    edgeWork: '芸術的な木炭スケッチスタイルを使用して画像の構造的なエッジをハイライトします。検出半径を調整して線の太さを制御します。',
+    vignette: 'マップの角と縁を暗くし、中心に注目を集めます。暗くする量とクリアエリアの半径を制御します。',
+    magnify: '設定可能な位置に円形の拡大鏡オーバーレイを作成します。サイズ、ズームレベル、ボーダー幅を調整します。',
+    hexagonalPixelate: '画像を六角形タイルのグリッドに置き換え、各タイルがカバーする領域の平均色で塗りつぶします。タイルのスケールを調整します。',
+    distanceFog: 'カメラからの深度に基づいて遠くのオブジェクトをフォグカラーにフェードさせ、奥行き感を高めます。密度、開始距離、範囲、フォグカラーを制御します。',
+    surfaceFog: '地形表面の上の特定の高度にフォグレイヤをレンダリングします。高度、遷移の厚さ、密度、色、オプションのノイズパターンを調整します。'
   },
   layerConfiguration: {
     defaultDescription: '選択されたフィールドに基づいて{property}を計算します',
-    howTo: '使い方'
+    howTo: '使い方',
+    showColorChart: 'カラーチャートを表示',
+    hideColorChart: 'カラーチャートを非表示'
   },
   filterManager: {
-    addFilter: 'フィルター追加'
+    addFilter: 'フィルター追加',
+    timeFilterSync: '同期データセット',
+    timeLayerSync: 'レイヤタイムラインにリンク',
+    timeLayerUnsync: 'レイヤタイムラインのリンクを解除',
+    column: '列'
   },
   datasetTitle: {
     showDataTable: 'データ表を表示',
     removeDataset: 'データセットを削除'
   },
   datasetInfo: {
-    rowCount: '{rowCount}行'
+    rowCount: '{rowCount}行',
+    vectorTile: 'ベクタータイル',
+    rasterTile: 'ラスタータイル',
+    wmsTile: 'WMSタイル',
+    tile3d: '3Dタイル',
+    bitmap: 'Bitmap image'
   },
   tooltip: {
     hideLayer: 'レイヤを非表示',
@@ -195,10 +334,16 @@ export default {
     layerSettings: 'レイヤ設定',
     closePanel: 'このパネルを閉じる',
     switchToDualView: 'デュアルビューに切り替え',
+    selectSplitMode: 'マップ表示モードを選択',
+    singleView: 'シングル',
+    dualView: 'デュアル',
+    swipeView: 'スワイプ',
     showLegend: '凡例を表示',
     disable3DMap: '3D地図を無効化',
     DrawOnMap: '地図上に図形を描画',
     selectLocale: '言語設定',
+    switchToLightTheme: 'ライトテーマに切り替え',
+    switchToDarkTheme: 'ダークテーマに切り替え',
     showAiAssistantPanel: 'AI 助手パネルを表示',
     hideAiAssistantPanel: 'AI 助手パネルを非表示',
     hideLayerPanel: 'レイヤパネルを非表示',
@@ -215,12 +360,37 @@ export default {
     play: '再生',
     pause: '一時停止',
     reset: 'リセット',
-    export: 'エクスポート'
+    export: 'エクスポート',
+    resetAfterError: 'エラー後にレイヤを有効にしてみる',
+    removeBaseMapStyle: 'ベースマップスタイルを削除',
+    timeFilterSync: '別のデータセットの列と同期',
+    syncTimelineStart: '現在のフィルタ期間の開始',
+    syncTimelineEnd: '現在のフィルタ期間の終了',
+    showEffectPanel: 'エフェクトパネルを表示',
+    hideEffectPanel: 'エフェクトパネルを非表示',
+    showAnnotationPanel: 'アノテーションを表示',
+    hideAnnotationPanel: 'アノテーションを非表示',
+    removeAnnotation: 'アノテーションを削除',
+    duplicateAnnotation: 'アノテーションを複製',
+    hideAnnotation: 'アノテーションを隠す',
+    showAnnotation: 'アノテーションを表示',
+    annotationSettings: 'アノテーション設定',
+    removeEffect: 'エフェクトを削除',
+    disableEffect: 'エフェクトを無効化',
+    effectSettings: 'エフェクト設定',
+    timeLayerSync: 'レイヤタイムラインにリンク',
+    timeLayerUnsync: 'レイヤタイムラインのリンクを解除',
+    zoomToLayer: 'Zoom to layer',
+    globeMap: 'Globe Map',
+    disableGlobeMap: 'Disable Globe Map',
+    viewMode: 'View Mode',
+    top: 'Top'
   },
   toolbar: {
     exportImage: '画像を出力',
     exportData: 'データを出力',
     exportMap: '地図を出力',
+    exportVideo: 'ビデオをエクスポート',
     shareMapURL: '地図のURLを共有',
     saveMap: '地図を保存',
     select: '選択',
@@ -229,6 +399,16 @@ export default {
     hide: '非表示',
     show: '表示',
     ...LOCALES
+  },
+  editor: {
+    filterLayer: 'レイヤをフィルタ',
+    filterLayerDisabled: 'ポリゴン以外のジオメトリはフィルタリングに使用できません',
+    copyGeometry: 'ジオメトリをコピー',
+    noLayersToFilter: 'フィルタするレイヤがありません'
+  },
+  exportVideoModal: {
+    animation: 'アニメーション',
+    settings: '設定'
   },
   modal: {
     title: {
@@ -239,7 +419,8 @@ export default {
       exportMap: '地図を出力',
       addCustomMapboxStyle: 'カスタムマップスタイルを追加',
       saveMap: '地図を保存',
-      shareURL: 'URLを共有'
+      shareURL: 'URLを共有',
+      exportVideo: 'ビデオをエクスポート'
     },
     button: {
       delete: '削除',
@@ -263,6 +444,10 @@ export default {
       mapLegendTitle: '地図の凡例',
       mapLegendAdd: '地図に判例を追加'
     },
+    exportVideo: {
+      animation: 'アニメーション',
+      settings: '設定'
+    },
     exportData: {
       datasetTitle: 'データセット',
       datasetSubtitle: 'エクスポートしたいデータセットを選択します',
@@ -270,27 +455,25 @@ export default {
       dataTypeTitle: 'データ形式',
       dataTypeSubtitle: 'エクスポートしたいデータ形式を選択します',
       filterDataTitle: 'データのフィルタ',
-      filterDataSubtitle:
-        '元データ（フィルタなし）とフィルタ済データのどちらをエクスポートするか選択します',
+      filterDataSubtitle: '元データ（フィルタなし）とフィルタ済データのどちらをエクスポートするか選択します',
       filteredData: 'フィルタ済データ',
       unfilteredData: '元データ',
       fileCount: '{fileCount}個のファイル',
-      rowCount: '{rowCount}行'
+      rowCount: '{rowCount}行',
+      tiledDatasetWarning: '* タイルデータセットのデータエクスポートはサポートされていません'
     },
     deleteData: {
       warning: 'このデータセットを削除します。{length}個のレイヤに影響します。'
     },
     addStyle: {
-      publishTitle:
-        '2. ステップ1でMapboxのスタイルURLを指定した場合、Mapboxでスタイルを公開するか、アクセストークンを以下に入力します（オプション）',
+      publishTitle: '2. ステップ1でMapboxのスタイルURLを指定した場合、Mapboxでスタイルを公開するか、アクセストークンを以下に入力します（オプション）',
       publishSubtitle1: '独自のスタイルを',
       publishSubtitle2: 'で作成し、',
       publishSubtitle3: '公開',
       publishSubtitle4: 'することができます',
       publishSubtitle5: '非公開のスタイルを使用するには、自身の',
       publishSubtitle6: 'アクセストークン',
-      publishSubtitle7:
-        'をここに入力します。*kepler.glはクライアント上で動作するため、データは自身のブラウザに保持されます。',
+      publishSubtitle7: 'をここに入力します。*kepler.glはクライアント上で動作するため、データは自身のブラウザに保持されます。',
       exampleToken: '例) pk.abcdefg.xxxxxx',
       pasteTitle: '1. スタイルのURLをペースト',
       pasteSubtitle0: 'スタイルのURLはMapboxの',
@@ -301,13 +484,12 @@ export default {
       namingTitle: '3. スタイルの名称を設定'
     },
     shareMap: {
+      title: '地図を共有',
       shareUriTitle: '地図のURLを共有',
       shareUriSubtitle: '共有用に地図のURLを生成',
       cloudTitle: 'クラウドストレージ',
       cloudSubtitle: 'ログインして地図データを個人用クラウドストレージにアップロード',
-      shareDisclaimer:
-        'kepler.glは作成した地図をあなたのクラウドストレージに保存するため、そのURLを知っている人のみが地図やそのデータにアクセス可能です。' +
-        'クラウドストレージのアカウントでいつでもデータファイルを編集/削除することができます。',
+      shareDisclaimer: 'kepler.glは作成した地図をあなたのクラウドストレージに保存するため、そのURLを知っている人のみが地図やそのデータにアクセス可能です。クラウドストレージのアカウントでいつでもデータファイルを編集/削除することができます。',
       gotoPage: 'Kepler.glの{currentProvider}ページに移動'
     },
     statusPanel: {
@@ -326,8 +508,8 @@ export default {
         tokenTitle: 'Mapboxアクセストークン',
         tokenSubtitle: 'HTMLファイルで自分のMapboxアクセストークンを使用します (オプション)',
         tokenPlaceholder: '自分のMapboxアクセストークンをここに貼り付け',
-        tokenMisuseWarning:
-          '* 自分のトークンを使用しない場合は、デフォルトのトークンが悪用防止のために更新され、地図が表示されなくなる可能性があります。  ',
+        tokenMisuseWarning: '* 自分のトークンを使用しない場合は、デフォルトのトークンが悪用防止のために更新され、地図が表示されなくなる可能性があります。  ',
+        tokenSecurityWarning: '* 警告：MapboxトークンはエクスポートされたHTMLファイルに埋め込まれます。このファイルにアクセスできる人は誰でもトークンを確認・使用できます。可能な場合はURL制限付きのスコープトークンを使用してください。',
         tokenDisclaimer: 'Mapboxのトークンは下記の方法に従って後から変更することも可能です：',
         tokenUpdate: '既存の地図のトークンを更新する方法',
         modeTitle: '地図のモード',
@@ -339,13 +521,9 @@ export default {
       },
       json: {
         configTitle: '地図の設定',
-        configDisclaimer:
-          '地図の設定はjsonファイルに収められます。他のアプリケーションでkepler.glを使用する場合、この設定をコピーペーストすることが可能です：',
-        selection:
-          '現在の地図データと設定を単一のjsonファイルに出力します。このファイルをkepler.glにアップロードすることで、同じ地図を後から開くことが可能になります。',
-        disclaimer:
-          '* 地図の設定は読み込まれたデータセットとセットになっています。‘dataId’によってレイヤ、フィルター、ツールチップは特定のデータセットに紐づけられます。 ' +
-          'この設定をaddDataToMapに渡す際は、データセットIDがこの設定内のdataIdと一致するようにしてください。'
+        configDisclaimer: '地図の設定はjsonファイルに収められます。他のアプリケーションでkepler.glを使用する場合、この設定をコピーペーストすることが可能です：',
+        selection: '現在の地図データと設定を単一のjsonファイルに出力します。このファイルをkepler.glにアップロードすることで、同じ地図を後から開くことが可能になります。',
+        disclaimer: '* 地図の設定は読み込まれたデータセットとセットになっています。‘dataId’によってレイヤ、フィルター、ツールチップは特定のデータセットに紐づけられます。 この設定をaddDataToMapに渡す際は、データセットIDがこの設定内のdataIdと一致するようにしてください。'
       }
     },
     loadingDialog: {
@@ -353,25 +531,99 @@ export default {
     },
     loadData: {
       upload: 'ファイルをロード',
+      tileset: 'タイルセット',
       storage: 'ストレージからロード'
     },
     tripInfo: {
       title: '移動アニメーションを有効にする方法',
-      description1:
-        '経路をアニメーション化するには、geoJSONデータはfeatureのgeometryとして `LineString` を含む必要があります。また、LineStringの座標は4つの要素を',
+      description1: `経路をアニメーション化するには、geoJSONデータはfeatureのgeometryとして \`LineString\` を含む必要があります。また、LineStringの座標は4つの要素を`,
       code: ' [経度, 緯度, 標高, timestamp] ',
-      description2:
-        'という形式（最後にタイムスタンプを含む）で保持する必要があります。タイムスタンプの形式は、 UNIX時間の秒単位（例: `1564184363`）またはミリ秒単位（例: `1564184363000`）が有効です。',
-      example: '例：'
+      description2: `という形式（最後にタイムスタンプを含む）で保持する必要があります。タイムスタンプの形式は、 UNIX時間の秒単位（例: \`1564184363\`）またはミリ秒単位（例: \`1564184363000\`）が有効です。`,
+      example: '例：',
+      titleTable: 'ポイントリストからトリップを作成',
+      descriptionTable1: 'トリップは緯度と経度のポイントリストを結合し、タイムスタンプで並べ替え、一意のIDでグループ化して作成できます。',
+      exampleTable: 'Example Csv'
     },
     iconInfo: {
       title: 'アイコンの描画方法',
-      description1:
-        'CSVファイルに列を作成し、描画したいアイコンの名称を記載します。アイコンの描画が不要な点があれば、セルを空白にすることも可能です。列名が',
+      description1: 'CSVファイルに列を作成し、描画したいアイコンの名称を記載します。アイコンの描画が不要な点があれば、セルを空白にすることも可能です。列名が',
       code: 'icon',
       description2: 'の場合、kepler.glは自動的にアイコンレイヤを作成します。',
       example: '例:',
       icons: 'アイコン一覧'
+    },
+    polygonInfo: {
+      title: 'GeoJSON機能からポリゴンレイヤを作成',
+      titleTable: 'ポイントからパスを作成',
+      descriptionTable: `パスは緯度と経度のポイントリストを結合し、インデックスフィールド（例：タイムスタンプ）で並べ替え、一意のIDでグループ化して作成できます。
+
+  ### レイヤ列：
+  - **id**: - *必須*&nbsp;- \`id\` 列はポイントのグループ化に使用されます。同じidを持つポイントは1つのパスに結合されます。
+  - **lat**: - *必須*&nbsp;- ポイントの緯度
+  - **lon**: - *必須*&nbsp;- ポイントの経度
+  - **alt**: - *任意*&nbsp;- ポイントの高度
+  - **sort by**: - *任意*&nbsp;- \`sort by\` 列はポイントの並べ替えに使用されます。指定しない場合、ポイントは行インデックス順に並べ替えられます。
+`,
+      exampleTable: 'Example CSV',
+      description: `Polygon can be created from
+__1 .A GeoJSON Feature Collection__
+__2. A Csv contains geometry column__
+
+### 1. Create polygon from GeoJSON file
+
+When upload a GeoJSON file contains FeatureCollection, a polygon layer will be auto-created
+
+Example GeoJSON
+\`\`\`json
+{
+  "type": "FeatureCollection",
+  "features": [{
+      "type": "Feature",
+      "geometry": {
+          "type": "Point",
+          "coordinates": [102.0, 0.5]
+      },
+      "properties": {
+          "prop0": "value0"
+      }
+  }, {
+      "type": "Feature",
+      "geometry": {
+          "type": "LineString",
+          "coordinates": [
+              [102.0, 0.0],
+              [103.0, 1.0],
+              [104.0, 0.0],
+              [105.0, 1.0]
+          ]
+      },
+      "properties": {
+        "prop0": "value0"
+      }
+  }]
+}
+\`\`\`
+
+### 2. Create polygon from a Geometry column in Csv table
+Geometries (Polygons, Points, LindStrings etc) can be embedded into CSV as a \`GeoJSON\` or \`WKT\` formatted string.
+
+#### 2.1 \`GeoJSON\` string
+Example data.csv with \`GeoJSON\` string
+\`\`\`txt
+id,_geojson
+1,"{""type"":""Polygon"",""coordinates"":[[[-74.158491,40.835947],[-74.157914,40.83902]]]}"
+\`\`\`
+
+#### 2.2 \`WKT\` string
+Example data.csv with \`WKT\` string
+[The Well-Known Text (WKT)](https://dev.mysql.com/doc/refman/5.7/en/gis-data-formats.html#gis-wkt-format) representation of geometry values is designed for exchanging geometry data in ASCII form.
+
+Example data.csv with WKT
+\`\`\`txt
+id,_geojson
+1,"POLYGON((0 0,10 0,10 10,0 10,0 0),(5 5,7 5,7 7,5 7, 5 5))"
+\`\`\`
+`
     },
     storageMapViewer: {
       lastModified: '最終編集：{lastUpdated} 前',
@@ -385,12 +637,14 @@ export default {
       back: '戻る',
       goToPage: 'Kepler.glの{displayName}ページに移動',
       storageMaps: 'ストレージ / 地図',
-      noSavedMaps: '保存済の地図はまだありません'
+      noSavedMaps: '保存済の地図はまだありません',
+      foursquareStorageMessage: 'Kepler.gl > 保存 > Foursquareストレージ オプションで保存されたマップのみがここに表示されます'
     }
   },
   header: {
     visibleLayers: '表示中のレイヤ',
-    layerLegend: 'レイヤ判例'
+    layerLegend: 'レイヤ判例',
+    annotations: 'アノテーション'
   },
   interactions: {
     tooltip: 'ツールチップ',
@@ -404,19 +658,38 @@ export default {
     normal: 'normal',
     subtractive: 'subtractive'
   },
+  overlayBlending: {
+    title: 'マップオーバーレイブレンド',
+    description: 'レイヤとベースマップをブレンドして両方を表示します。',
+    screen: 'ダークベースマップ',
+    normal: 'ノーマル',
+    darken: 'ライトベースマップ'
+  },
   columns: {
     title: '列',
     lat: '緯度',
     lng: '経度',
     altitude: '標高',
+    alt: '高度',
+    id: 'id',
+    timestamp: '時間',
     icon: 'アイコン',
     geojson: 'geojson',
+    geoarrow: 'geoarrow',
+    geoarrow0: 'geoarrow ソース',
+    geoarrow1: 'geoarrow ターゲット',
     token: 'トークン',
+    sortBy: '並べ替え',
+    neighbors: '隣接',
     arc: {
       lat0: '出発 緯度',
       lng0: '出発 経度',
       lat1: '到着 緯度',
       lng1: '到着 経度'
+    },
+    line: {
+      alt0: '出発 標高',
+      alt1: '到着 標高'
     },
     grid: {
       worldUnitSize: 'グリッドサイズ (km)'
@@ -424,36 +697,53 @@ export default {
     hexagon: {
       worldUnitSize: '六角形の半径 (km)'
     },
-    hex_id: 'hex id'
+    hex_id: 'hex id',
+    flow: {
+      source: {
+        lat: '出発 緯度',
+        lng: '出発 経度',
+        name: '出発名',
+        h3: '出発 H3'
+      },
+      target: {
+        lat: '到着 緯度',
+        lng: '到着 経度',
+        name: '到着名',
+        h3: '到着 H3'
+      },
+      count: '件数'
+    }
   },
   color: {
     customPalette: 'カスタムパレット',
     steps: '段階数',
     type: 'タイプ',
-    reversed: '反転'
+    reversed: '反転',
+    colorBlindSafe: '色覚安全',
+    disableStepReason: 'カスタムカラーブレークでは段階数を変更できません。段階を編集するにはカスタムパレットを使用してください',
+    preset: 'プリセットカラー',
+    picker: 'カラーピッカー'
   },
   scale: {
     colorScale: 'カラースケール',
     sizeScale: 'サイズのスケール',
     strokeScale: '線のスケール',
+    strokeColorScale: '線の色のスケール',
     scale: 'スケール'
   },
   fileUploader: {
     message: 'ここにファイルをドロップ（複数可）',
-    chromeMessage:
-      '*Chromeユーザーの場合: ファイルサイズは250mbまでにしてください。それ以上のファイルをアップロードする必要がある場合、Safariを試してください。',
-    disclaimer:
-      '*kepler.glはクライアント上で動作します。データは自身の機器・ブラウザにのみ保持されます。' +
-      '情報や地図データは、いかなるサーバーにも送信されません。',
-    configUploadMessage:
-      '{fileFormatNames} または保存済地図の**Json**をアップロードします。詳細は以下を参照してください：[**対応ファイル形式**]',
+    chromeMessage: '*Chromeユーザーの場合: ファイルサイズは250mbまでにしてください。それ以上のファイルをアップロードする必要がある場合、Safariを試してください。',
+    disclaimer: '*kepler.glはクライアント上で動作します。データは自身の機器・ブラウザにのみ保持されます。情報や地図データは、いかなるサーバーにも送信されません。',
+    configUploadMessage: '{fileFormatNames} または保存済地図の**Json**をアップロードします。詳細は以下を参照してください：[**対応ファイル形式**]',
     browseFiles: 'デバイスのファイルを選択',
     uploading: 'アップロード中',
     fileNotSupported: '{errorFiles} はサポートされていないファイルです。',
-    or: 'or'
+    or: 'または'
   },
   geocoder: {
-    title: '住所または座標を入力（例： 37.79,-122.40）'
+    title: '住所または座標を入力（例： 37.79,-122.40）',
+    limitSearch: 'Limit Search to Viewport'
   },
   fieldSelector: {
     clearAll: '全て解除',
@@ -470,11 +760,61 @@ export default {
   mapPopover: {
     primary: 'プライマリ'
   },
-  density: 'density',
+  density: '密度',
   'Bug Report': 'バグを報告',
   'User Guide': 'ユーザーガイド',
   Save: '保存',
   Share: '共有',
+  flow: {
+    tooltip: {
+      location: {
+        name: '名称',
+        incomingCount: '流入',
+        outgoingCount: '流出',
+        internalCount: '内部'
+      },
+      flow: {
+        sourceName: '出発地',
+        targetName: '目的地',
+        count: '件数'
+      }
+    }
+  },
+  tilesetSetup: {
+    header: 'ベクタータイルの設定',
+    rasterTileHeader: 'ラスタータイルの設定',
+    addTilesetText: 'タイルセットを追加'
+  },
+  mapLegend: {
+    layers: {
+      line: {
+        singleColor: {
+          sourceColor: '始点',
+          targetColor: '終点'
+        }
+      },
+      arc: {
+        singleColor: {
+          sourceColor: '始点',
+          targetColor: '終点'
+        }
+      },
+      default: {
+        singleColor: {
+          color: '塗りつぶしの色',
+          strokeColor: '輪郭線',
+          sourceColor: 'Source',
+          targetColor: 'Target'
+        }
+      },
+      point: {
+        singleColor: {
+          color: 'Fill color',
+          strokeColor: 'Outline'
+        }
+      }
+    }
+  },
   dataTable: {
     displayFormat: {
       setIntegerNumberFormat: '整数の表示形式',
@@ -483,5 +823,6 @@ export default {
       setDateFormat: '日付の表示形式',
       setBooleanFormat: '真偽値の表示形式'
     }
-  }
+  },
+  'Update color': 'Update color'
 };

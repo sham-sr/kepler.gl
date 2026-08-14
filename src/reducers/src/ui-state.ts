@@ -46,7 +46,9 @@ const actionHandler = {
   [ActionTypes.TOGGLE_SPLIT_MAP]: uiStateUpdaters.toggleSplitMapUpdater,
   [ActionTypes.SHOW_DATASET_TABLE]: uiStateUpdaters.showDatasetTableUpdater,
   [ActionTypes.SET_LOCALE]: uiStateUpdaters.setLocaleUpdater,
-  [ActionTypes.TOGGLE_PANEL_LIST_VIEW]: uiStateUpdaters.togglePanelListViewUpdater
+  [ActionTypes.SET_THEME]: uiStateUpdaters.setThemeUpdater,
+  [ActionTypes.TOGGLE_PANEL_LIST_VIEW]: uiStateUpdaters.togglePanelListViewUpdater,
+  [ActionTypes.RECEIVE_MAP_CONFIG]: uiStateUpdaters.receiveMapConfigUpdater
 };
 
 /* Reducer */

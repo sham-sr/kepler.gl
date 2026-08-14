@@ -19,6 +19,7 @@ import {loadImages} from '../images';
 import type {RasterLayerAddedProps, ImageState} from '../types';
 import {modulesEqual, applyModuleUniforms} from '../util';
 import {patchPipelineValidation} from '../pipeline-validation-patch';
+import {rasterProcessingUniforms} from '../raster-processing-uniforms';
 import {TOPOLOGY} from '@kepler.gl/constants';
 
 type Mesh = SimpleMeshLayerProps['mesh'];
@@ -74,6 +75,10 @@ export default class RasterMeshLayer extends SimpleMeshLayer<any, RasterLayerAdd
   };
 
   _redrawScheduled = false;
+  _pendingImageRetry: RasterLayerAddedProps['images'] | null = null;
+  /** How many consecutive frames have retried a failed texture upload. */
+  _imageRetryCount = 0;
+  static readonly MAX_IMAGE_RETRY_ATTEMPTS = 3;
 
   initializeState(): void {
     patchPipelineValidation();
@@ -88,11 +93,18 @@ export default class RasterMeshLayer extends SimpleMeshLayer<any, RasterLayerAdd
     const lumaModules = prepareLumaModules(modules);
     const parentShaders = super.getShaders();
 
+    // Filter out simpleMeshUniforms from parent — RasterMeshLayer uses its own
+    // shaders that don't reference SimpleMesh uniforms, and every UBO counts
+    // against the WebGL2 GL_MAX_FRAGMENT_UNIFORM_BUFFERS limit (typically 12).
+    const parentModules = (parentShaders.modules || []).filter(
+      (m: {name?: string}) => m.name !== 'simpleMesh'
+    );
+
     return {
       ...parentShaders,
       vs: buildRasterMeshVertexShader(),
       fs: buildRasterMeshFragmentShader(),
-      modules: [...(parentShaders.modules || []), rasterMeshUniforms, ...lumaModules]
+      modules: [...parentModules, rasterMeshUniforms, rasterProcessingUniforms, ...lumaModules]
     };
   }
 
@@ -145,7 +157,7 @@ export default class RasterMeshLayer extends SimpleMeshLayer<any, RasterLayerAdd
     const device = this.context.device;
     const gl = device?.gl || this.context.gl;
 
-    const newImages = loadImages({
+    const {images: newImages, hasPendingUploads} = loadImages({
       gl,
       device,
       images,
@@ -156,9 +168,51 @@ export default class RasterMeshLayer extends SimpleMeshLayer<any, RasterLayerAdd
     if (newImages) {
       this.setState({images: newImages});
     }
+    // If any texture upload failed, stash the imagesData and schedule a retry
+    // next frame. The retry passes oldImagesData: {} so all keys bypass the
+    // isEqual skip-check.
+    if (hasPendingUploads) {
+      this._pendingImageRetry = props.images;
+      this._imageRetryCount = 0;
+      this._scheduleRedraw();
+    }
   }
 
   draw(_opts: Record<string, unknown>): void {
+    // If a previous frame had failed texture uploads, retry them now before
+    // checking whether the images state is complete. Pass oldImagesData: {} so
+    // all keys are treated as new and bypass the isEqual skip-check.
+    // Retries are bounded to MAX_IMAGE_RETRY_ATTEMPTS to avoid an infinite
+    // redraw loop when image data is permanently invalid.
+    if (this._pendingImageRetry) {
+      const retry = this._pendingImageRetry;
+      this._pendingImageRetry = null;
+      const {images: newImages, hasPendingUploads} = loadImages({
+        gl: this.context.device?.gl || this.context.gl,
+        device: this.context.device,
+        images: this.state.images,
+        imagesData: retry,
+        oldImagesData: {}
+      });
+      if (newImages) {
+        this.setState({images: newImages});
+      }
+      if (hasPendingUploads) {
+        this._imageRetryCount++;
+        if (this._imageRetryCount < RasterMeshLayer.MAX_IMAGE_RETRY_ATTEMPTS) {
+          this._pendingImageRetry = retry;
+          this._scheduleRedraw();
+        } else {
+          console.warn(
+            `RasterMeshLayer: texture upload failed after ${RasterMeshLayer.MAX_IMAGE_RETRY_ATTEMPTS} attempts, giving up.`
+          );
+          this._imageRetryCount = 0;
+        }
+      } else {
+        this._imageRetryCount = 0;
+      }
+    }
+
     const {model, images} = this.state;
     const {moduleProps} = this.props;
 

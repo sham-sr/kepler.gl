@@ -2,6 +2,7 @@
 // Copyright contributors to the kepler.gl project
 
 import {Field, Millisecond} from './types';
+import {MapSplitMode, MapViewMode} from '@kepler.gl/constants';
 type MapViewState = {
   latitude: number;
   longitude: number;
@@ -24,9 +25,12 @@ export type MapState = {
   height: number;
   minZoom?: number;
   maxZoom?: number;
+  maxPitch?: number;
   maxBounds?: Bounds;
   initialState?: any;
   scale?: number;
+  /** Layer rendering parameters forwarded from visState for use during layer construction in globe mode. */
+  layerParameters?: Record<string, string | boolean>;
 
   // the following 4 properties assist with split viewports that can optionally have (un)synced viewports and zooms
   /**  Is the application split into 2 maps? */
@@ -37,6 +41,35 @@ export type MapState = {
   isZoomLocked: boolean;
   /**  An array of either 0 or 2 Viewport objects (index 0 for left map; index 1 for right map) */
   splitMapViewports: Viewport[];
+  mapViewMode?: MapViewMode;
+  globe?: {
+    enabled: boolean;
+    config: {
+      atmosphere: boolean;
+      hugeHalo: boolean;
+      hugeHaloRadius: number;
+      hugeHaloOpacity: number;
+      azimuth: boolean;
+      azimuthAngle: number;
+      terminator: boolean;
+      terminatorOpacity: number;
+      basemap: boolean;
+      labels: boolean;
+      labelsColor: [number, number, number];
+      adminLines: boolean;
+      adminLinesColor: [number, number, number];
+      water: boolean;
+      waterColor: [number, number, number];
+      surfaceColor: [number, number, number];
+      surface: boolean;
+      backgroundColor: [number, number, number];
+      stars: boolean;
+    };
+  };
+  /** The current split map mode (single, dual, swipe) */
+  mapSplitMode: MapSplitMode;
+  /** Swipe compare divider position as a percentage (0-100) */
+  swipeComparePercentage: number;
 };
 
 export type Bounds = [number, number, number, number];
@@ -249,6 +282,20 @@ export type SplitMap = {
   layers: SplitMapLayers;
 };
 
+export type LayerOrderGroup = {
+  id: string;
+  label: string;
+  isVisible: boolean;
+  layerOrder: LayerOrder;
+  isIncludedInLegend: boolean;
+};
+
+export type LayerOrderEntry = string | LayerOrderGroup;
+export type LayerOrder = LayerOrderEntry[];
+export type FlatLayerOrder = string[];
+export type LayerOrderHierarchyEntry = ['layer', any] | ['layerGroup', LayerOrderGroup];
+export type LayerOrderHierarchy = LayerOrderHierarchyEntry[];
+
 /** See "Locale aware formats" at https://momentjs.com/docs/#/parsing/string-format/ */
 export type AnimationConfigTimeFormat = 'L' | 'L LT' | 'L LTS';
 
@@ -317,6 +364,9 @@ export type TooltipInfo = BaseInteraction & {
 export type Geocoder = BaseInteraction & {
   id: 'geocoder';
   position: number[] | null;
+  config: {
+    limitSearch: boolean;
+  };
 };
 export type Brush = BaseInteraction & {
   id: 'brush';
@@ -425,6 +475,9 @@ export type ExportVideo = {
   fileName: string;
   resolution: string;
   durationMs: number;
+  swipeStartPct: number;
+  swipeEndPct: number;
+  swipeEasing: 'linear' | 'ease-in-out';
 };
 
 export type MapControlItem = {
@@ -455,7 +508,9 @@ export type MapControls = {
   splitMap?: MapControlItem;
   mapDraw?: MapControlItem;
   mapLocale?: MapControlItem;
+  mapTheme?: MapControlItem;
   effect?: MapControlItem;
+  annotation?: MapControlItem;
   aiAssistant?: MapControlItem;
 };
 
@@ -473,6 +528,8 @@ export type Notifications = {
 };
 
 export type Locale = string;
+
+export type UiTheme = string;
 
 export type PanelListView = string;
 
@@ -498,6 +555,8 @@ export type UiState = {
   loadFiles: LoadFiles;
   // Locale of the UI
   locale: Locale;
+  // Theme of the UI (`light` | `dark`), used when enableThemeToggle is on
+  theme: UiTheme;
   // view layers by list or dataset
   layerPanelListView: PanelListView;
   // view filters by list or dataset
@@ -530,6 +589,8 @@ export type Viewport = {
   minZoom?: number;
   /**  Maximum allowed viewport zoom */
   maxZoom?: number;
+  /**  Maximum pitch angle in degrees */
+  maxPitch?: number;
   /**  Maximum geographical bounds, pan/zoom operations are constrained within those bounds */
   maxBounds?: Bounds;
   /** viewport transition duration use by geocoder panel **/

@@ -27,6 +27,31 @@ export type SavedMapState = {
   isViewportSynced?: true;
   isZoomLocked?: false;
   splitMapViewports?: [];
+  mapViewMode?: string;
+  globe?: {
+    enabled: boolean;
+    config: {
+      atmosphere: boolean;
+      hugeHalo?: boolean;
+      hugeHaloRadius?: number;
+      hugeHaloOpacity?: number;
+      azimuth: boolean;
+      azimuthAngle: number;
+      terminator: boolean;
+      terminatorOpacity: number;
+      basemap: boolean;
+      labels: boolean;
+      labelsColor: [number, number, number];
+      adminLines: boolean;
+      adminLinesColor: [number, number, number];
+      water: boolean;
+      waterColor: [number, number, number];
+      surface: boolean;
+      surfaceColor: [number, number, number];
+      backgroundColor: [number, number, number];
+      stars?: boolean;
+    };
+  };
 };
 
 export type SavedLayerGroups = {
@@ -68,7 +93,11 @@ export type SavedMap = {
 export type LoadedMap = {datasets?: ParsedDataset[] | null; config?: ParsedConfig | null};
 
 export const reducerSchema: {
-  [key: string]: typeof mapStateSchema | typeof visStateSchema | typeof mapStyleSchema;
+  [key: string]:
+    | typeof mapStateSchema
+    | typeof visStateSchema
+    | typeof mapStyleSchema
+    | typeof uiStateSchema;
 } = {
   visState: visStateSchema,
   mapState: mapStateSchema,

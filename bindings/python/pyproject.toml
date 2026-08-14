@@ -1,6 +1,6 @@
 [project]
 name = "keplergl"
-version = "0.4.0rc1"
+version = "0.4.0rc4"
 description = "Kepler.gl Jupyter Widget"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -23,7 +23,7 @@ dependencies = [
 dev = [
     "pytest>=8.0",
     "pytest-cov>=4.0",
-    "jupyterlab>=4.0",
+    "jupyterlab>=4.5.10",
     "notebook>=7.0",
 ]
 
@@ -50,6 +50,6 @@ build_cmd = "build"
 dev-dependencies = [
     "pytest>=8.0",
     "pytest-cov>=4.0",
-    "jupyterlab>=4.0",
+    "jupyterlab>=4.5.10",
     "notebook>=7.0",
 ]

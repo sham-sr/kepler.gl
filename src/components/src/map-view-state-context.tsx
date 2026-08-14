@@ -10,6 +10,9 @@ type MapViewState = {
   zoom: number;
   bearing?: number;
   pitch?: number;
+  maxPitch?: number;
+  minZoom?: number;
+  maxZoom?: number;
 };
 import {pickViewportPropsFromMapState} from '@kepler.gl/reducers';
 

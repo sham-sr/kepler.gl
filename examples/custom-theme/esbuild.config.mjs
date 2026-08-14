@@ -2,19 +2,18 @@
 // Copyright contributors to the kepler.gl project
 
 import esbuild from 'esbuild';
-import {replace} from 'esbuild-plugin-replace';
 import {dotenvRun} from '@dotenv-run/esbuild';
 import copyPlugin from 'esbuild-plugin-copy';
 
 import process from 'node:process';
 import fs from 'node:fs';
-import {spawn} from 'node:child_process';
-import {join, dirname} from 'node:path';
+import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import {spawn} from 'node:child_process';
 
 const args = process.argv;
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const shouldSanitizeEnvForDefine =
   process.platform === 'win32' && process.env.KEPLER_ESBUILD_SANITIZE_ENV === '1';
@@ -35,33 +34,16 @@ const port = Number(process.env.PORT) || 8080;
 
 const NODE_ENV = JSON.stringify(process.env.NODE_ENV || 'production');
 
-// Ensure a single instance of React and friends to avoid invalid hook calls
-const ROOT_NODE_MODULES = join(__dirname, 'node_modules');
-const thirdPartyAliases = {
-  react: join(ROOT_NODE_MODULES, 'react'),
-  'react-dom': join(ROOT_NODE_MODULES, 'react-dom'),
-  'react-redux': join(ROOT_NODE_MODULES, 'react-redux', 'lib'),
-  'styled-components': join(ROOT_NODE_MODULES, 'styled-components'),
-  'apache-arrow': join(ROOT_NODE_MODULES, 'apache-arrow')
-};
-
 const config = {
   platform: 'browser',
   format: 'iife',
   logLevel: 'info',
-  loader: {
-    '.js': 'jsx',
-    '.css': 'css',
-    '.ttf': 'file',
-    '.woff': 'file',
-    '.woff2': 'file'
-  },
+  loader: {'.js': 'jsx', '.css': 'css'},
   entryPoints: ['src/main.js'],
   outfile: 'dist/bundle.js',
   bundle: true,
   define: {
-    NODE_ENV,
-    'process.env.MapboxAccessToken': JSON.stringify(process.env.MapboxAccessToken || '')
+    NODE_ENV
   },
   plugins: [
     dotenvRun({
@@ -69,10 +51,23 @@ const config = {
       environment: NODE_ENV,
       root: '../../.env'
     }),
-    replace({
-      __PACKAGE_VERSION__: '3.1.10',
-      include: /constants\/src\/default-settings\.ts/
-    }),
+    // styled-components: @hubble.gl/react nests its own copy.
+    // react-palm: several @kepler.gl/* packages nest their own copy.
+    // Both are singletons that break when loaded more than once.
+    {
+      name: 'dedupe-singletons',
+      setup(build) {
+        build.onResolve({filter: /^(styled-components|react-palm(\/|$)|react$|react-dom$)/}, async args => {
+          if (args.pluginData?.deduped) return;
+          const result = await build.resolve(args.path, {
+            resolveDir: __dirname,
+            kind: args.kind,
+            pluginData: {deduped: true}
+          });
+          return result;
+        });
+      }
+    },
     copyPlugin({
       resolveFrom: 'cwd',
       assets: {
@@ -100,16 +95,13 @@ function openURL(url) {
     const result = await esbuild
       .build({
         ...config,
-        alias: thirdPartyAliases,
         minify: true,
         sourcemap: false,
         metafile: true,
         define: {
           ...config.define,
           'process.env.NODE_ENV': '"production"'
-        },
-        drop: ['console', 'debugger'],
-        treeShaking: true
+        }
       })
       .catch(e => {
         console.error(e);
@@ -122,7 +114,6 @@ function openURL(url) {
     await esbuild
       .context({
         ...config,
-        alias: thirdPartyAliases,
         minify: false,
         sourcemap: true,
         banner: {
@@ -139,7 +130,7 @@ function openURL(url) {
             console.info(remoteAddress, status, `"${method} ${path}" [${timeInMS}ms]`);
           }
         });
-        console.info(`kepler.gl custom-theme example running at ${`http://localhost:${port}`}`);
+        console.info(`kepler.gl custom-theme example running at http://localhost:${port}`);
         openURL(`http://localhost:${port}`);
       })
       .catch(e => {

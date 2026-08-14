@@ -5,9 +5,13 @@ import esbuild from 'esbuild';
 import copyPlugin from 'esbuild-plugin-copy';
 import process from 'node:process';
 import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {spawn} from 'node:child_process';
 
 const args = process.argv;
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const port = Number(process.env.PORT) || 8080;
 
@@ -33,6 +37,23 @@ const config = {
     'process.env.NODE_DEBUG': JSON.stringify(false)
   },
   plugins: [
+    // styled-components: @hubble.gl/react nests its own copy.
+    // react-palm: @kepler.gl/actions, reducers, table, tasks each nest their own copy.
+    // Both are singletons that break when loaded more than once.
+    {
+      name: 'dedupe-singletons',
+      setup(build) {
+        build.onResolve({filter: /^(styled-components|react-palm(\/|$)|react$|react-dom$)/}, async args => {
+          if (args.pluginData?.deduped) return;
+          const result = await build.resolve(args.path, {
+            resolveDir: __dirname,
+            kind: args.kind,
+            pluginData: {deduped: true}
+          });
+          return result;
+        });
+      }
+    },
     copyPlugin({
       resolveFrom: 'cwd',
       assets: {

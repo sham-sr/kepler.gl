@@ -11,7 +11,8 @@ import {
   EXPORT_IMG_RATIOS,
   EXPORT_MAP_FORMATS,
   RESOLUTIONS,
-  MAP_CONTROLS
+  MAP_CONTROLS,
+  THEME
 } from '@kepler.gl/constants';
 import {LOCALE_CODES} from '@kepler.gl/localization';
 import {
@@ -26,6 +27,7 @@ import {
   ActionTypes,
   KeplerGlInitPayload,
   LoadFilesErrUpdaterAction,
+  ReceiveMapConfigPayload,
   UIStateActions
 } from '@kepler.gl/actions';
 import {
@@ -105,7 +107,8 @@ const DEFAULT_MAP_LEGEND_CONTROL = {
  * @property toggle3d Default: `{show: true}`
  * @property splitMap Default: `{show: true}`
  * @property mapDraw Default: `{show: true, active: false}`
- * @property mapLocale Default: `{show: false, active: false}`
+ * @property mapLocale Default: `{show: true, active: false}`
+ * @property mapTheme Default: `{show: true, active: false}`
  * @public
  */
 export const DEFAULT_MAP_CONTROLS: MapControls = (
@@ -230,7 +233,7 @@ export const DEFAULT_EXPORT_MAP: ExportMap = {
  * @property mediaType Default: `'webm'`
  * @property cameraPreset Default: `'None'`
  * @property fileName Default: `'kepler.gl'`
- * @property resolution Default: `''`
+ * @property resolution Default: `'1280x720'`
  * @property durationMs Default: `1000`
  * @public
  */
@@ -238,8 +241,11 @@ export const DEFAULT_EXPORT_VIDEO: ExportVideo = {
   mediaType: 'webm', // use webm as default as gif export tends to freeze on larger recordings
   cameraPreset: 'None',
   fileName: 'kepler.gl',
-  resolution: '',
-  durationMs: 1000
+  resolution: '1280x720',
+  durationMs: 1000,
+  swipeStartPct: 0,
+  swipeEndPct: 100,
+  swipeEasing: 'ease-in-out'
 };
 
 /**
@@ -258,6 +264,8 @@ export const DEFAULT_EXPORT_VIDEO: ExportVideo = {
  * @property notifications Default: `[]`
  * @property notifications Default: `[]`
  * @property loadFiles
+ * @property locale Default: `'en'`
+ * @property theme Default: `'dark'`
  * @property isSidePanelCloseButtonVisible Default: `true`
  * @public
  */
@@ -283,6 +291,8 @@ export const INITIAL_UI_STATE: UiState = {
   loadFiles: DEFAULT_LOAD_FILES,
   // Locale of the UI
   locale: LOCALE_CODES.en,
+  // Theme of the UI (used when enableThemeToggle is on)
+  theme: THEME.dark,
   layerPanelListView: 'list',
   filterPanelListView: 'list',
   isSidePanelCloseButtonVisible: true
@@ -383,6 +393,16 @@ export const toggleSidePanelCloseButtonUpdater = (
   isSidePanelCloseButtonVisible: show
 });
 
+// Map control dropdowns/menus that overlap each other visually and therefore
+// should be mutually exclusive: opening one closes all the others.
+// (split/view-mode menu, top/3d/globe menu, polygon draw tool, language menu)
+export const MUTUALLY_EXCLUSIVE_MAP_CONTROLS: string[] = [
+  MAP_CONTROLS.splitMap,
+  MAP_CONTROLS.toggle3d,
+  MAP_CONTROLS.mapDraw,
+  MAP_CONTROLS.mapLocale
+];
+
 /**
  * Toggle active map control panel
  * @memberof uiStateUpdaters
@@ -406,15 +426,6 @@ export const toggleMapControlUpdater = (
       ? MAP_CONTROLS.effect
       : null;
 
-  // To to toggle the mapDraw and mapLocal dropdowns
-  // We have to deactivate the other active dropdown
-  const dropdownToDeactivate =
-    panelId === MAP_CONTROLS.mapDraw
-      ? MAP_CONTROLS.mapLocale
-      : panelId === MAP_CONTROLS.mapLocale
-      ? MAP_CONTROLS.mapDraw
-      : null;
-
   // If we need to deactivate a competing panel and it's currently active
   if (panelToDeactivate && state.mapControls[panelToDeactivate]?.active) {
     updatedState = {
@@ -429,18 +440,22 @@ export const toggleMapControlUpdater = (
     };
   }
 
-  // If we need to deactivate a competing dropdown and it's currently active
-  if (dropdownToDeactivate && state.mapControls[dropdownToDeactivate]?.active) {
-    updatedState = {
-      ...state,
-      mapControls: {
-        ...updatedState.mapControls,
-        [dropdownToDeactivate]: {
-          ...updatedState.mapControls[dropdownToDeactivate],
-          active: false
-        }
+  // The overlapping map control menus should be mutually exclusive: when one of
+  // them is being opened, deactivate every other one that is currently active
+  // so their dropdowns never overlap on screen.
+  const isOpening = !updatedState.mapControls[panelId]?.active;
+  if (isOpening && MUTUALLY_EXCLUSIVE_MAP_CONTROLS.includes(panelId)) {
+    const nextMapControls = {...updatedState.mapControls};
+    let didDeactivate = false;
+    MUTUALLY_EXCLUSIVE_MAP_CONTROLS.forEach(controlId => {
+      if (controlId !== panelId && nextMapControls[controlId]?.active) {
+        nextMapControls[controlId] = {...nextMapControls[controlId], active: false};
+        didDeactivate = true;
       }
-    };
+    });
+    if (didDeactivate) {
+      updatedState = {...updatedState, mapControls: nextMapControls};
+    }
   }
 
   return {
@@ -548,9 +563,6 @@ export const setExportImageSettingUpdater = (
     ...state,
     exportImage: {
       ...updated,
-      // @ts-expect-error
-      // TODO: calculateExportImageSize does not return imageSize.zoomOffset,
-      // do we need take this value from current state, or return defaul value = 0
       imageSize
     }
   };
@@ -951,6 +963,24 @@ export const setLocaleUpdater = (
 });
 
 /**
+ * Set the theme of the UI
+ * @memberof uiStateUpdaters
+ * @param state `uiState`
+ * @param action
+ * @param action.payload
+ * @param action.payload.theme theme
+ * @returns nextState
+ * @public
+ */
+export const setThemeUpdater = (
+  state: UiState,
+  {payload: {theme}}: UIStateActions.SetThemeUpdaterAction
+): UiState => ({
+  ...state,
+  theme
+});
+
+/**
  * Toggle layer panel list view
  * @memberof uiStateUpdaters
  * @param state `uiState`
@@ -976,4 +1006,66 @@ export const togglePanelListViewUpdater = (
     ...state,
     [stateProp]: listView
   };
+};
+
+/**
+ * Merge received ui state config when loading a saved map
+ * @memberof uiStateUpdaters
+ * @param state `uiState`
+ * @param action
+ * @param action.payload saved map config `{mapStyle, visState, mapState, uiState}`
+ * @returns nextState
+ * @public
+ */
+export const receiveMapConfigUpdater = (
+  state: UiState,
+  {
+    payload: {config}
+  }: {
+    type?: (typeof ActionTypes)['RECEIVE_MAP_CONFIG'];
+    payload: ReceiveMapConfigPayload;
+  }
+): UiState => {
+  const {uiState} = config || {};
+  if (!uiState) {
+    return state;
+  }
+
+  let newState = state;
+
+  if (uiState.mapControls?.mapLegend?.active) {
+    const currentLegend = newState.mapControls.mapLegend;
+    newState = {
+      ...newState,
+      mapControls: {
+        ...newState.mapControls,
+        mapLegend: {
+          show: true,
+          ...currentLegend,
+          active: true,
+          activeMapIndex: 0
+        }
+      }
+    };
+  }
+
+  if (uiState.mapControls?.mapLegend?.settings) {
+    newState = setMapControlSettingsUpdater(newState, {
+      payload: {panelId: 'mapLegend', settings: uiState.mapControls.mapLegend.settings}
+    } as UIStateActions.setMapControlSettingsUpdaterAction);
+  }
+
+  if (uiState.locale) {
+    newState = setLocaleUpdater(newState, {
+      payload: {locale: uiState.locale}
+    } as UIStateActions.SetLocaleUpdaterAction);
+  }
+
+  if (uiState.theme) {
+    newState = setThemeUpdater(newState, {
+      payload: {theme: uiState.theme}
+    } as UIStateActions.SetThemeUpdaterAction);
+  }
+
+  return newState;
 };

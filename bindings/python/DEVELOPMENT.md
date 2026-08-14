@@ -5,7 +5,7 @@ This guide explains how to set up kepler.gl for Jupyter for local development.
 ## Prerequisites
 
 - Python >= 3.9
-- Node.js (for building the frontend)
+- Node.js >= 20 (for building the frontend)
 - JupyterLab >= 4.0 or Notebook >= 7.0
 
 ## Installation
@@ -102,6 +102,7 @@ The version in `pyproject.toml` determines what type of release you can publish:
 1. **Update the version** in both files:
    - `pyproject.toml` (line: `version = "x.x.x"`)
    - `keplergl/_version.py` (line: `__version__ = "x.x.x"`)
+   - On a kepler.gl **major** release, also update `DEFAULT_KEPLER_GL_CDN_VERSION` in `keplergl/_html_export.py` to match the new major version.
 
 2. **Go to GitHub Actions** → "Build and Publish KeplerGL Python Package" workflow
 
