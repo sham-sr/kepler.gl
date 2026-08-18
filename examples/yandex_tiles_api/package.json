@@ -1,0 +1,27 @@
+{
+  "name": "kepler-yandex-tiles-api",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "start": "node esbuild.config.mjs --start",
+    "build": "node esbuild.config.mjs --build",
+    "start-local": "NODE_ENV=local node esbuild.config.mjs --start"
+  },
+  "dependencies": {
+    "@kepler.gl/components": "^3.3.0-alpha.6",
+    "@kepler.gl/reducers": "^3.3.0-alpha.6",
+    "@kepler.gl/utils": "^3.3.0-alpha.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-redux": "^9.1.0",
+    "redux": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "esbuild": "^0.25.0",
+    "esbuild-plugin-copy": "^2.1.1",
+    "typescript": "^5.5.0"
+  }
+}

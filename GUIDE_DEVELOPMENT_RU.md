@@ -125,6 +125,7 @@ yarn start
 4. **Запуск других примеров:**
    ```bash
    yarn start:custom-map-style    # Пример с кастомными стилями карты
+   yarn start:yandex-tiles-api    # Подложка Яндекс Tiles API вместо Mapbox
    yarn start:custom-theme       # Пример с кастомной темой
    yarn start:custom-reducer      # Пример с кастомным reducer
    yarn start:replace-component   # Пример с заменой компонентов

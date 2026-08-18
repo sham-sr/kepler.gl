@@ -81,7 +81,7 @@ const App = () => (
 #### Option 2. Reducer `initialState`
 Pass custom `mapStyles` to kepler.gl `mapStyle` reducer using the `initialState` plugin. And set default style by passing `styleType`.
 
-This method is demoed in the example app [Custom Map Style](https://github.com/keplergl/kepler.gl/tree/master/examples/custom-map-style)
+This method is demoed in the example app [Custom Map Style](https://github.com/keplergl/kepler.gl/tree/master/examples/custom-map-style). For raster XYZ tiles (Yandex Tiles API) see [Yandex Tiles API](https://github.com/keplergl/kepler.gl/tree/master/examples/yandex_tiles_api).
 
 ```js
 const customizedKeplerGlReducer = keplerGlReducer.initialState({

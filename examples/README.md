@@ -26,7 +26,7 @@ Example folders are **not** listed in the root `package.json` `workspaces`, so Y
 From the **repository root**, after `yarn install` at the root:
 
 - **Demo app:** `yarn start:windows` (sets OpenSSL / esbuild env for Windows).
-- **Other examples:** `yarn start:open-modal:windows`, `yarn start:custom-reducer:windows`, `yarn start:replace-component:windows`, `yarn start:custom-theme:windows`, `yarn start:custom-map-style:windows`, `yarn start:node-app:windows`.
+- **Other examples:** `yarn start:open-modal:windows`, `yarn start:custom-reducer:windows`, `yarn start:replace-component:windows`, `yarn start:custom-theme:windows`, `yarn start:custom-map-style:windows`, `yarn start:yandex-tiles-api:windows`, `yarn start:node-app:windows`.
 
 Or manually: `cd examples/<name>`, then `yarn install`, then `yarn start-local` / `yarn start:local` / `yarn start` as in that folder’s `package.json`.
 
@@ -69,6 +69,9 @@ On Unix/macOS you can keep using `yarn start:open-modal` etc.
 - ### [Custom Map Style][custom-map-style]
   Use kepler.gl with basemap services other than Mapbox (e.g. MapLibre / Carto).
 
+- ### [Yandex Tiles API][yandex-tiles-api]
+  Use [Yandex Maps Tiles API](https://yandex.ru/maps-api/docs/tiles-api/index.html) raster tiles as the kepler.gl basemap (MapLibre + `projection=web_mercator`).
+
 - ### [Node App][node-app]
   Embed kepler.gl in a Node.js/Express application — builds the bundle with esbuild and serves it as static files.
 
@@ -85,12 +88,15 @@ On Unix/macOS you can keep using `yarn start:open-modal` etc.
 [custom-theme]: custom-theme/README.md
 [custom-layer]: custom-layer/README.md
 [custom-map-style]: custom-map-style/README.md
+[yandex-tiles-api]: yandex_tiles_api/README.md
 [node-app]: node-app/README.md
 [umd-client]: umd-client/README.md
 
 ## Mapbox token
 
 All examples default to a **MapLibre / Carto basemap** so they work without any token.
+
+The [Yandex Tiles API][yandex-tiles-api] example is the exception: it needs `YandexTilesApiKey` (see that folder’s README).
 
 If you want to use **Mapbox basemaps**, set the `MapboxAccessToken` environment variable before starting an example:
 
