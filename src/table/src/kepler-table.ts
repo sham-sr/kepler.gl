@@ -664,9 +664,14 @@ export function findPointFieldPairs(fields: Field[]): FieldPair[] {
 
         if (partnerIdx > -1) {
           const trimName = fieldName.replace(re, '').trim();
+          const displayName = fields[idx].displayName;
+          const defaultName =
+            displayName && displayName !== fields[idx].name
+              ? displayName.replace(re, '').trim() || displayName
+              : trimName || 'point';
 
           carry.push({
-            defaultName: trimName || 'point',
+            defaultName,
             pair: {
               lat: {
                 fieldIdx: idx,
