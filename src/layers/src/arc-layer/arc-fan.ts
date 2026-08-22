@@ -18,15 +18,60 @@ type PointChunk = {
   end: number;
 };
 
-function odKey(lng0: number, lat0: number, lng1: number, lat1: number): string {
-  return `${lng0.toFixed(ARC_FAN_COORD_PRECISION)},${lat0.toFixed(ARC_FAN_COORD_PRECISION)}>${lng1.toFixed(
-    ARC_FAN_COORD_PRECISION
-  )},${lat1.toFixed(ARC_FAN_COORD_PRECISION)}`;
+function endpointKey(lng: number, lat: number): string {
+  return `${lng.toFixed(ARC_FAN_COORD_PRECISION)},${lat.toFixed(ARC_FAN_COORD_PRECISION)}`;
 }
 
 /**
- * Assigns deck.gl ArcLayer `getTilt` values so duplicate origin→destination arcs
- * spread sideways instead of stacking. Single arcs stay at 0.
+ * Undirected station pair (A↔B). `dir` is 0 when source sorts first, 1 for the reverse.
+ * deck.gl `getTilt` rotates around source→target, so the same signed tilt on A→B and B→A
+ * lands on opposite sides of the corridor.
+ */
+function corridorKey(
+  lng0: number,
+  lat0: number,
+  lng1: number,
+  lat1: number
+): {key: string; dir: 0 | 1} {
+  const src = endpointKey(lng0, lat0);
+  const tgt = endpointKey(lng1, lat1);
+  if (src <= tgt) {
+    return {key: `${src}<->${tgt}`, dir: 0};
+  }
+  return {key: `${tgt}<->${src}`, dir: 1};
+}
+
+type CorridorGroup = {dir0: number[]; dir1: number[]};
+
+function assignSymmetricFan(indices: number[], maxTilt: number, tilts: Float32Array): void {
+  const n = indices.length;
+  if (n <= 1) {
+    return;
+  }
+  const last = n - 1;
+  for (let k = 0; k < n; k++) {
+    tilts[indices[k]] = -maxTilt + (2 * maxTilt * k) / last;
+  }
+}
+
+function assignSameSignFan(indices: number[], maxTilt: number, tilts: Float32Array): void {
+  const n = indices.length;
+  if (n === 0) {
+    return;
+  }
+  if (n === 1) {
+    tilts[indices[0]] = maxTilt;
+    return;
+  }
+  for (let k = 0; k < n; k++) {
+    tilts[indices[k]] = (maxTilt * (k + 1)) / n;
+  }
+}
+
+/**
+ * Assigns deck.gl ArcLayer `getTilt` so stacked OD arcs spread sideways.
+ * One-way unique pairs stay at 0. A→B and B→A share a corridor and get the same
+ * signed tilt so reverse trips do not collapse onto one geodesic.
  */
 export function computeArcFanTilts(
   count: number,
@@ -40,7 +85,7 @@ export function computeArcFanTilts(
     return tilts;
   }
 
-  const groups = new Map<string, number[]>();
+  const groups = new Map<string, CorridorGroup>();
   for (let i = 0; i < count; i++) {
     if (isVisible && !isVisible(i)) {
       continue;
@@ -49,23 +94,26 @@ export function computeArcFanTilts(
     if (!pos || !Number.isFinite(pos[0]) || !Number.isFinite(pos[1]) || !Number.isFinite(pos[2]) || !Number.isFinite(pos[3])) {
       continue;
     }
-    const key = odKey(pos[0], pos[1], pos[2], pos[3]);
-    const group = groups.get(key);
-    if (group) {
-      group.push(i);
+    const {key, dir} = corridorKey(pos[0], pos[1], pos[2], pos[3]);
+    let group = groups.get(key);
+    if (!group) {
+      group = {dir0: [], dir1: []};
+      groups.set(key, group);
+    }
+    if (dir === 0) {
+      group.dir0.push(i);
     } else {
-      groups.set(key, [i]);
+      group.dir1.push(i);
     }
   }
 
-  for (const group of groups.values()) {
-    const n = group.length;
-    if (n <= 1) {
-      continue;
-    }
-    const last = n - 1;
-    for (let k = 0; k < n; k++) {
-      tilts[group[k]] = -maxTilt + (2 * maxTilt * k) / last;
+  for (const {dir0, dir1} of groups.values()) {
+    const hasBoth = dir0.length > 0 && dir1.length > 0;
+    if (hasBoth) {
+      assignSameSignFan(dir0, maxTilt, tilts);
+      assignSameSignFan(dir1, maxTilt, tilts);
+    } else {
+      assignSymmetricFan(dir0.length ? dir0 : dir1, maxTilt, tilts);
     }
   }
 

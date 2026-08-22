@@ -18,6 +18,20 @@ test('Utils -> computeArcFanTilts', t => {
   t.end();
 });
 
+test('Utils -> computeArcFanTilts splits reverse OD pairs', t => {
+  const positions = [
+    [0, 0, 1, 1],
+    [1, 1, 0, 0],
+    [2, 2, 3, 3]
+  ];
+  const tilts = computeArcFanTilts(positions.length, i => positions[i], 35);
+
+  t.equal(tilts[0], 35, 'outbound A→B leaves the geodesic');
+  t.equal(tilts[1], 35, 'return B→A uses the same signed tilt (axis is reversed)');
+  t.equal(tilts[2], 0, 'unrelated one-way pair stays untilted');
+  t.end();
+});
+
 test('Utils -> makePointCoordReader reads interleaved buffers', t => {
   const values = new Float32Array([10, 20, 30, 40, 50, 60]);
   const reader = makePointCoordReader({

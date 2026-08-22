@@ -256,7 +256,7 @@ function LayerManagerFactory(
                 id="new-layer-group"
                 onClick={onAddGroup}
                 IconComponent={Folder}
-                tooltip="Create layer group"
+                tooltip="tooltip.createLayerGroup"
               />
             ) : null}
             <AddLayerButton datasets={datasets} onAdd={onAddLayer} />

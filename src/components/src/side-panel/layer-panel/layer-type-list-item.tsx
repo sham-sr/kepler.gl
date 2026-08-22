@@ -12,6 +12,7 @@ import {BaseProps} from '../../common/icons';
 
 export type LayerTypeListItemProps = {
   value: {
+    id?: string;
     icon: ComponentType<Partial<BaseProps>>;
     label: string;
   };
@@ -81,7 +82,7 @@ export function LayerTypeListItemFactory() {
       </div>
       <div className="layer-type-selector__item__label">
         <FormattedMessage
-          id={`layer.type.${value.label.toLowerCase()}`}
+          id={`layer.type.${(value.id ?? value.label).toLowerCase()}`}
           defaultMessage={value.label}
         />
       </div>

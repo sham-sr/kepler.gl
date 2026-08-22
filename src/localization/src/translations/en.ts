@@ -130,6 +130,7 @@ export default {
       heatmap: 'heatmap',
       hexagon: 'hexagon',
       hexagonid: 'H3',
+      a5: 'A5',
       trip: 'trip',
       s2: 'S2',
       '3d': '3D',
@@ -195,7 +196,7 @@ export default {
     highPrecisionRenderingDescription: 'High precision will result in slower performance',
     fanOverlappingArcs: 'Fan overlapping arcs',
     fanOverlappingArcsDescription:
-      'Tilt duplicate origin-destination arcs sideways so they do not stack',
+      'Tilt duplicate and reverse origin-destination arcs sideways so they do not stack',
     tiltMax: 'Max tilt (degrees)',
     height: 'Height',
     heightDescription: 'Click button at top right of the map to switch to 3d view',
@@ -410,7 +411,12 @@ export default {
     annotationSettings: 'Annotation settings',
     removeEffect: 'Remove effect',
     disableEffect: 'Disable effect',
-    effectSettings: 'Effect settings'
+    effectSettings: 'Effect settings',
+    createLayerGroup: 'Create layer group',
+    removeLayerGroup: 'Remove group',
+    toggleLayerGroupVisibility: 'Toggle group visibility',
+    toggleLayerGroupContent: 'Toggle group content',
+    removeLayerGroupWithLayers: 'Remove group with layers?'
   },
   toolbar: {
     exportImage: 'Export Image',

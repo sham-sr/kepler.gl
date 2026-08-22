@@ -101,6 +101,10 @@ export type ArcLayerMeta = {
   bounds: LayerBounds;
 };
 
+type ArcTiltAccessor =
+  | number
+  | ((d: {index?: number; position?: number[]}, objectInfo?: {index: number}) => number);
+
 export const arcRequiredColumns = ['lat0', 'lng0', 'lat1', 'lng1'];
 export const neighborRequiredColumns = ['lat', 'lng', 'neighbors'];
 export const geoarrowRequiredColumns = ['geoarrow0', 'geoarrow1'];
@@ -246,7 +250,7 @@ export default class ArcLayer extends Layer {
     sourceRef: unknown;
     targetRef: unknown;
     filterTrigger: unknown;
-    accessor: number | ((d: {index?: number; position?: number[]}, objectInfo?: {index: number}) => number);
+    accessor: ArcTiltAccessor;
   } | null = null;
 
   constructor(props) {
@@ -546,9 +550,7 @@ export default class ArcLayer extends Layer {
     this.updateMeta({bounds});
   }
 
-  getArcTiltAccessor(layerData: {
-    data?: ArcLayerData[] | arrow.Table;
-  }): number | ((d: {index?: number; position?: number[]}, objectInfo?: {index: number}) => number) {
+  getArcTiltAccessor(layerData: {data?: ArcLayerData[] | arrow.Table}): ArcTiltAccessor {
     const {fanOverlappingArcs, tiltMax} = this.config.visConfig;
     if (!fanOverlappingArcs || !tiltMax) {
       this.arcTiltCache = null;
@@ -642,7 +644,7 @@ export default class ArcLayer extends Layer {
           return tilts[d.index] ?? 0;
         }
         const index = objectInfo?.index;
-        return Number.isFinite(index) ? tilts[index] ?? 0 : 0;
+        return typeof index === 'number' ? tilts[index] ?? 0 : 0;
       };
     }
 

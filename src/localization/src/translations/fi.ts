@@ -125,6 +125,7 @@ export default {
       heatmap: 'lämpökartta',
       hexagon: 'kuusikulmio',
       hexagonid: 'H3',
+      a5: 'A5',
       trip: 'matka',
       s2: 'S2',
       '3d': '3D',
@@ -186,7 +187,7 @@ export default {
     highPrecisionRenderingDescription: 'Tarkka renderöinti johtaa hitaampaan suorittamiseen',
     fanOverlappingArcs: 'Fan overlapping arcs',
     fanOverlappingArcsDescription:
-      'Tilt duplicate origin-destination arcs sideways so they do not stack',
+      'Tilt duplicate and reverse origin-destination arcs sideways so they do not stack',
     tiltMax: 'Max tilt (degrees)',
     height: 'Korkeus',
     heightDescription: 'Klikkaa oikeasta ylänurkasta nappia vaihtaaksesi 3D-näkymään',
@@ -388,7 +389,12 @@ export default {
     globeMap: 'Globe Map',
     disableGlobeMap: 'Disable Globe Map',
     viewMode: 'View Mode',
-    top: 'Top'
+    top: 'Top',
+    createLayerGroup: 'Create layer group',
+    removeLayerGroup: 'Remove group',
+    toggleLayerGroupVisibility: 'Toggle group visibility',
+    toggleLayerGroupContent: 'Toggle group content',
+    removeLayerGroupWithLayers: 'Remove group with layers?'
   },
   toolbar: {
     exportImage: 'Vie kuva',

@@ -125,6 +125,7 @@ export default {
       heatmap: 'heatmap',
       hexagon: 'hexagon',
       hexagonid: 'H3',
+      a5: 'A5',
       trip: 'trip',
       s2: 'S2',
       '3d': '3D',
@@ -186,7 +187,7 @@ export default {
     highPrecisionRenderingDescription: '高精度渲染会导致性能下降',
     fanOverlappingArcs: 'Fan overlapping arcs',
     fanOverlappingArcsDescription:
-      'Tilt duplicate origin-destination arcs sideways so they do not stack',
+      'Tilt duplicate and reverse origin-destination arcs sideways so they do not stack',
     tiltMax: 'Max tilt (degrees)',
     height: '高度',
     heightDescription: '点击屏幕右上角的按钮切换到3D视图',
@@ -388,7 +389,12 @@ export default {
     globeMap: 'Globe Map',
     disableGlobeMap: 'Disable Globe Map',
     viewMode: 'View Mode',
-    top: 'Top'
+    top: 'Top',
+    createLayerGroup: 'Create layer group',
+    removeLayerGroup: 'Remove group',
+    toggleLayerGroupVisibility: 'Toggle group visibility',
+    toggleLayerGroupContent: 'Toggle group content',
+    removeLayerGroupWithLayers: 'Remove group with layers?'
   },
   toolbar: {
     exportImage: '导出图片',

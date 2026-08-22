@@ -125,6 +125,7 @@ export default {
       heatmap: 'тепловая карта',
       hexagon: 'шестиугольник',
       hexagonid: 'H3',
+      a5: 'A5',
       trip: 'пути',
       s2: 'S2',
       '3d': '3D',
@@ -186,7 +187,7 @@ export default {
     highPrecisionRenderingDescription: 'Высокая точность приведет к снижению производительности',
     fanOverlappingArcs: 'Развести совпадающие дуги',
     fanOverlappingArcsDescription:
-      'Отклонять дуги с одинаковыми началом и концом в сторону, чтобы они не накладывались',
+      'Отклонять дуги с одинаковым коридором, включая туда и обратно, чтобы они не сливались',
     tiltMax: 'Макс. наклон (градусы)',
     height: 'Высота',
     heightDescription: 'Нажмите кнопку в правом верхнем углу карты, чтобы переключиться в 3D-вид',
@@ -388,7 +389,12 @@ export default {
     globeMap: 'Глобус',
     disableGlobeMap: 'Отключить глобус',
     viewMode: 'Режим просмотра',
-    top: 'Сверху'
+    top: 'Сверху',
+    createLayerGroup: 'Создать группу слоёв',
+    removeLayerGroup: 'Удалить группу',
+    toggleLayerGroupVisibility: 'Переключить видимость группы',
+    toggleLayerGroupContent: 'Свернуть или развернуть группу',
+    removeLayerGroupWithLayers: 'Удалить группу вместе со слоями?'
   },
   toolbar: {
     exportImage: 'Экспорт изображения',

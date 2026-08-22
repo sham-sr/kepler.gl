@@ -5,6 +5,7 @@ import React, {useCallback, useState, useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import styled from 'styled-components';
 
+import {FormattedMessage} from '@kepler.gl/localization';
 import {updateLayerGroup, removeLayerGroup} from '@kepler.gl/actions';
 import {LayerOrderGroup} from '@kepler.gl/types';
 import {getFlatLayerOrder} from '@kepler.gl/reducers';
@@ -223,7 +224,7 @@ function LayerGroupHeaderFactory(
               <PanelHeaderAction
                 className="layer-group__delete"
                 id={`${id}-delete`}
-                tooltip="Remove group"
+                tooltip="tooltip.removeLayerGroup"
                 onClick={onDelete}
                 IconComponent={Trash}
               />
@@ -231,14 +232,14 @@ function LayerGroupHeaderFactory(
             <PanelHeaderAction
               className="layer-group__visibility-toggle"
               id={`${id}-visibility`}
-              tooltip="Toggle group visibility"
+              tooltip="tooltip.toggleLayerGroupVisibility"
               onClick={onToggleVisibility}
               IconComponent={VisibilityIcon}
             />
             <PanelHeaderAction
               className="layer-group__section-toggle"
               id={`${id}-collapse`}
-              tooltip="Toggle group content"
+              tooltip="tooltip.toggleLayerGroupContent"
               onClick={onToggleLayerGroupContent}
               IconComponent={CollapseIcon}
             />
@@ -246,8 +247,12 @@ function LayerGroupHeaderFactory(
         </Container>
         {showConfirmation ? (
           <ConfirmationBar ref={confirmRef} onClick={stopPropagation}>
-            <span>Remove group with layers?</span>
-            <ConfirmButton onClick={onConfirmDelete}>Remove</ConfirmButton>
+            <span>
+              <FormattedMessage id="tooltip.removeLayerGroupWithLayers" />
+            </span>
+            <ConfirmButton onClick={onConfirmDelete}>
+              <FormattedMessage id="tooltip.delete" />
+            </ConfirmButton>
           </ConfirmationBar>
         ) : null}
       </div>

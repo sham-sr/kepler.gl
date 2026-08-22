@@ -492,6 +492,14 @@ test('#computeArcFanTilts', t => {
 
   const off = computeArcFanTilts(positions.length, i => positions[i], 0);
   t.deepEqual(Array.from(off), [0, 0, 0, 0], 'tiltMax 0 should keep all arcs flat');
+
+  const reverse = computeArcFanTilts(
+    2,
+    i => (i === 0 ? [0, 0, 1, 1] : [1, 1, 0, 0]),
+    40
+  );
+  t.equal(reverse[0], 40, 'A→B should tilt off the shared geodesic');
+  t.equal(reverse[1], 40, 'B→A should use the same signed tilt');
   t.end();
 });
 
