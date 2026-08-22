@@ -17,7 +17,7 @@ import {
 import testArcData, {arcFromHex, arcFromNeighbor} from 'test/fixtures/test-arc-data';
 import {StateWArcNeighbors} from 'test/helpers/mock-state';
 import {PROJECTED_PIXEL_SIZE_MULTIPLIER} from '@kepler.gl/constants';
-import {KeplerGlLayers} from '@kepler.gl/layers';
+import {KeplerGlLayers, computeArcFanTilts} from '@kepler.gl/layers';
 import {copyTableAndUpdate} from '@kepler.gl/table';
 import {cellToLatLng} from 'h3-js';
 
@@ -44,6 +44,12 @@ test('#ArcLayer -> constructor', t => {
           t.ok(layer.isAggregated === false, 'ArcLayer is not aggregated');
           t.ok(layer.config.label === 'test arc layer', 'label should be correct');
           t.ok(Object.keys(layer.columnPairs).length, 'should have columnPairs');
+          t.equal(
+            layer.config.visConfig.fanOverlappingArcs,
+            true,
+            'fan overlapping arcs should be on by default'
+          );
+          t.equal(layer.config.visConfig.tiltMax, 35, 'default max tilt should be 35');
         }
       }
     ]
@@ -462,5 +468,79 @@ test('#ArcLayer -> renderLayer', t => {
   ];
 
   testRenderLayerCases(t, ArcLayer, TEST_CASES);
+  t.end();
+});
+
+test('#computeArcFanTilts', t => {
+  const positions = [
+    [0, 0, 1, 1],
+    [0, 0, 1, 1],
+    [2, 2, 3, 3],
+    [0, 0, 1, 1]
+  ];
+  const tilts = computeArcFanTilts(positions.length, i => positions[i], 40);
+
+  t.equal(tilts[0], -40, 'first duplicate should tilt to -max');
+  t.equal(tilts[1], 0, 'middle duplicate should sit at 0');
+  t.equal(tilts[2], 0, 'unique pair should stay at 0');
+  t.equal(tilts[3], 40, 'last duplicate should tilt to +max');
+
+  const hidden = computeArcFanTilts(positions.length, i => positions[i], 40, i => i !== 3);
+  t.equal(hidden[0], -40, 'two visible duplicates should still fan');
+  t.equal(hidden[1], 40, 'two visible duplicates should still fan');
+  t.equal(hidden[3], 0, 'filtered-out row should keep 0');
+
+  const off = computeArcFanTilts(positions.length, i => positions[i], 0);
+  t.deepEqual(Array.from(off), [0, 0, 0, 0], 'tiltMax 0 should keep all arcs flat');
+  t.end();
+});
+
+test('#ArcLayer -> getTilt fans overlapping arcs', t => {
+  const layer = new ArcLayer({id: 'fan-test', dataId, isVisible: true});
+  const duplicateData = [
+    {index: 0, sourcePosition: [0, 0, 0], targetPosition: [1, 1, 0]},
+    {index: 1, sourcePosition: [0, 0, 0], targetPosition: [1, 1, 0]},
+    {index: 2, sourcePosition: [2, 2, 0], targetPosition: [3, 3, 0]}
+  ];
+  const renderOpts = {
+    data: {
+      data: duplicateData,
+      getWidth: 1,
+      getSourceColor: [10, 10, 10],
+      getTargetColor: [10, 10, 10],
+      getFilterValue: () => [0, 0, 0, 0]
+    },
+    idx: 0,
+    gpuFilter: {filterValueUpdateTriggers: {}, filterRange: []},
+    objectHovered: null,
+    interactionConfig: {brush: {enabled: false, config: {size: 0.5}}},
+    dataset: {},
+    mapState: {},
+    visible: true,
+    layerCallbacks: {}
+  };
+
+  const [deckLayer] = layer.renderLayer(renderOpts);
+  const {getTilt} = deckLayer.props;
+  t.equal(typeof getTilt, 'function', 'should provide getTilt accessor when fan is on');
+  t.equal(getTilt(duplicateData[0], {index: 0}), -35, 'first overlapping arc should tilt left');
+  t.equal(getTilt(duplicateData[1], {index: 1}), 35, 'second overlapping arc should tilt right');
+  t.equal(getTilt(duplicateData[2], {index: 2}), 0, 'unique arc should stay untilted');
+
+  const [again] = layer.renderLayer({...renderOpts, mapState: {latitude: 1}});
+  t.equal(again.props.getTilt, getTilt, 'pan/rebuild should reuse cached getTilt accessor');
+
+  layer.updateLayerConfig({
+    visConfig: {...layer.config.visConfig, tiltMax: 20}
+  });
+  const [resized] = layer.renderLayer(renderOpts);
+  t.notEqual(resized.props.getTilt, getTilt, 'tiltMax change should rebuild tilt accessor');
+  t.equal(resized.props.getTilt(duplicateData[0], {index: 0}), -20, 'new tiltMax should apply');
+
+  layer.updateLayerConfig({
+    visConfig: {...layer.config.visConfig, fanOverlappingArcs: false}
+  });
+  const [offLayer] = layer.renderLayer(renderOpts);
+  t.equal(offLayer.props.getTilt, 0, 'disabled fan should pass constant 0 tilt');
   t.end();
 });

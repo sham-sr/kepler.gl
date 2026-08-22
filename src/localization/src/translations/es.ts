@@ -184,6 +184,10 @@ export default {
     coverageRange: 'Rango de cobertura',
     highPrecisionRendering: 'Representación de alta precisión',
     highPrecisionRenderingDescription: 'La precisión alta tendrá un rendimiento más bajo',
+    fanOverlappingArcs: 'Fan overlapping arcs',
+    fanOverlappingArcsDescription:
+      'Tilt duplicate origin-destination arcs sideways so they do not stack',
+    tiltMax: 'Max tilt (degrees)',
     height: 'Altura',
     heightDescription: 'Haz clic en el botón de arriba a la derecha del mapa per cambiar a vista 3D',
     fill: 'Rellenar',

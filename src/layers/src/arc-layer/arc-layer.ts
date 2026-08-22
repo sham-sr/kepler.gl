@@ -27,7 +27,8 @@ import {isLayerHoveredFromArrow, createGeoArrowPointVector, getFilteredIndex} fr
 import {
   DEFAULT_LAYER_COLOR,
   PROJECTED_PIXEL_SIZE_MULTIPLIER,
-  ALL_FIELD_TYPES
+  ALL_FIELD_TYPES,
+  PROPERTY_GROUPS
 } from '@kepler.gl/constants';
 
 import {
@@ -36,6 +37,7 @@ import {
   Merge,
   VisConfigColorRange,
   VisConfigColorSelect,
+  VisConfigBoolean,
   VisConfigNumber,
   VisConfigRange,
   LayerColumn,
@@ -43,6 +45,7 @@ import {
   AnimationConfig
 } from '@kepler.gl/types';
 import {KeplerTable} from '@kepler.gl/table';
+import {computeArcFanTilts, makePointCoordReader} from './arc-fan';
 
 export type ArcLayerVisConfigSettings = {
   opacity: VisConfigNumber;
@@ -50,6 +53,8 @@ export type ArcLayerVisConfigSettings = {
   colorRange: VisConfigColorRange;
   sizeRange: VisConfigRange;
   targetColor: VisConfigColorSelect;
+  fanOverlappingArcs: VisConfigBoolean;
+  tiltMax: VisConfigNumber;
 };
 
 export type ArcLayerColumnsConfig = {
@@ -75,6 +80,8 @@ export type ArcLayerVisConfig = {
   sizeRange: [number, number];
   targetColor: RGBColor;
   thickness: number;
+  fanOverlappingArcs: boolean;
+  tiltMax: number;
 };
 
 export type ArcLayerVisualChannelConfig = LayerColorConfig & LayerSizeConfig;
@@ -112,12 +119,33 @@ export const arcVisConfigs: {
   colorRange: 'colorRange';
   sizeRange: 'strokeWidthRange';
   targetColor: 'targetColor';
+  fanOverlappingArcs: VisConfigBoolean;
+  tiltMax: VisConfigNumber;
 } = {
   opacity: 'opacity',
   thickness: 'thickness',
   colorRange: 'colorRange',
   sizeRange: 'strokeWidthRange',
-  targetColor: 'targetColor'
+  targetColor: 'targetColor',
+  fanOverlappingArcs: {
+    type: 'boolean',
+    defaultValue: true,
+    label: 'layerVisConfigs.fanOverlappingArcs',
+    description: 'layerVisConfigs.fanOverlappingArcsDescription',
+    group: PROPERTY_GROUPS.display,
+    property: 'fanOverlappingArcs'
+  },
+  tiltMax: {
+    type: 'number',
+    defaultValue: 35,
+    label: 'layerVisConfigs.tiltMax',
+    isRanged: false,
+    range: [0, 90],
+    step: 1,
+    group: PROPERTY_GROUPS.display,
+    property: 'tiltMax',
+    allowCustomValue: true
+  }
 };
 
 export const COLUMN_MODE_POINTS = 'points';
@@ -207,6 +235,20 @@ export default class ArcLayer extends Layer {
   filteredIndex: Uint8ClampedArray | null = null;
   filteredIndexTrigger: number[] = [];
 
+  /**
+   * Fan tilt is O(N) grouping. Cache the accessor so pan/zoom / deck layer
+   * rebuilds do not regroup the same arcs.
+   */
+  private arcTiltCache: {
+    fanEnabled: boolean;
+    tiltMax: number;
+    dataRef: unknown;
+    sourceRef: unknown;
+    targetRef: unknown;
+    filterTrigger: unknown;
+    accessor: number | ((d: {index?: number; position?: number[]}, objectInfo?: {index: number}) => number);
+  } | null = null;
+
   constructor(props) {
     super(props);
 
@@ -225,6 +267,10 @@ export default class ArcLayer extends Layer {
 
   get layerIcon() {
     return ArcLayerIcon;
+  }
+
+  get noneLayerDataAffectingProps() {
+    return [...super.noneLayerDataAffectingProps, 'fanOverlappingArcs', 'tiltMax'];
   }
 
   get columnLabels(): Record<string, string> {
@@ -500,17 +546,127 @@ export default class ArcLayer extends Layer {
     this.updateMeta({bounds});
   }
 
+  getArcTiltAccessor(layerData: {
+    data?: ArcLayerData[] | arrow.Table;
+  }): number | ((d: {index?: number; position?: number[]}, objectInfo?: {index: number}) => number) {
+    const {fanOverlappingArcs, tiltMax} = this.config.visConfig;
+    if (!fanOverlappingArcs || !tiltMax) {
+      this.arcTiltCache = null;
+      return 0;
+    }
+
+    const data = layerData?.data;
+    const dataRef = Array.isArray(data) ? data : this.geoArrowVector0;
+    const sourceRef = this.geoArrowVector0;
+    const targetRef = this.geoArrowVector1;
+    const filterTrigger = Array.isArray(data) ? data : this.filteredIndexTrigger;
+    const cache = this.arcTiltCache;
+    if (
+      cache &&
+      cache.fanEnabled &&
+      cache.tiltMax === tiltMax &&
+      cache.dataRef === dataRef &&
+      cache.sourceRef === sourceRef &&
+      cache.targetRef === targetRef &&
+      cache.filterTrigger === filterTrigger
+    ) {
+      return cache.accessor;
+    }
+
+    const accessor = this.buildArcTiltAccessor(data, tiltMax);
+    this.arcTiltCache = {
+      fanEnabled: true,
+      tiltMax,
+      dataRef,
+      sourceRef,
+      targetRef,
+      filterTrigger,
+      accessor
+    };
+    return accessor;
+  }
+
+  private buildArcTiltAccessor(
+    data: ArcLayerData[] | arrow.Table | undefined,
+    tiltMax: number
+  ): number | ((d: {index?: number; position?: number[]}, objectInfo?: {index: number}) => number) {
+    if (Array.isArray(data)) {
+      const scratch: [number, number, number, number] = [0, 0, 0, 0];
+      const tilts = computeArcFanTilts(
+        data.length,
+        i => {
+          const source = data[i].sourcePosition;
+          const target = data[i].targetPosition;
+          if (!source || !target) {
+            return null;
+          }
+          scratch[0] = source[0];
+          scratch[1] = source[1];
+          scratch[2] = target[0];
+          scratch[3] = target[1];
+          return scratch;
+        },
+        tiltMax
+      );
+      const byObject = new WeakMap<object, number>();
+      for (let i = 0; i < data.length; i++) {
+        byObject.set(data[i], tilts[i]);
+      }
+      return d => (d && typeof d === 'object' ? byObject.get(d) ?? 0 : 0);
+    }
+
+    if (this.geoArrowVector0 && this.geoArrowVector1) {
+      const sourceReader = makePointCoordReader(this.geoArrowVector0);
+      const targetReader = makePointCoordReader(this.geoArrowVector1);
+      const sourcePoint: [number, number] = [0, 0];
+      const targetPoint: [number, number] = [0, 0];
+      const scratch: [number, number, number, number] = [0, 0, 0, 0];
+      const filteredIndex = this.filteredIndex;
+      const tilts = computeArcFanTilts(
+        sourceReader.length,
+        i => {
+          if (!sourceReader.read(i, sourcePoint) || !targetReader.read(i, targetPoint)) {
+            return null;
+          }
+          scratch[0] = sourcePoint[0];
+          scratch[1] = sourcePoint[1];
+          scratch[2] = targetPoint[0];
+          scratch[3] = targetPoint[1];
+          return scratch;
+        },
+        tiltMax,
+        filteredIndex ? i => filteredIndex[i] === 1 : undefined
+      );
+      return (d, objectInfo) => {
+        if (d && Array.isArray(d.position) && typeof d.index === 'number') {
+          return tilts[d.index] ?? 0;
+        }
+        const index = objectInfo?.index;
+        return Number.isFinite(index) ? tilts[index] ?? 0 : 0;
+      };
+    }
+
+    return 0;
+  }
+
   renderLayer(opts) {
     const {data, gpuFilter, objectHovered, interactionConfig, dataset, mapState} = opts;
     const updateTriggers = {
       getPosition: this.config.columns,
       getFilterValue: gpuFilter.filterValueUpdateTriggers,
       getFiltered: this.filteredIndexTrigger,
+      getTilt: [
+        this.config.visConfig.fanOverlappingArcs,
+        this.config.visConfig.tiltMax,
+        this.config.columns,
+        this.filteredIndexTrigger
+      ],
       ...this.getVisualChannelUpdateTriggers()
     };
     const widthScale = this.config.visConfig.thickness * PROJECTED_PIXEL_SIZE_MULTIPLIER;
     const defaultLayerProps = this.getDefaultDeckLayerProps(opts);
     const hoveredObject = this.hasHoveredObject(objectHovered);
+    const getTilt = this.getArcTiltAccessor(data);
 
     // In globe mode deck.gl is configured with a global `cull: true` to backface-
     // cull the globe surface. The arc is drawn as a billboarded triangle-strip
@@ -549,6 +705,7 @@ export default class ArcLayer extends Layer {
         ...experimentalPropOverrides,
         ...globeParameters,
         widthScale,
+        getTilt,
         updateTriggers,
         extensions: [
           ...defaultLayerProps.extensions,
@@ -567,7 +724,8 @@ export default class ArcLayer extends Layer {
               widthScale,
               getSourceColor: this.config.highlightColor,
               getTargetColor: this.config.highlightColor,
-              getWidth: data.getWidth
+              getWidth: data.getWidth,
+              getTilt
             })
           ]
         : [])

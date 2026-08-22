@@ -953,6 +953,20 @@ export default function LayerConfiguratorFactory(
               />
             </LayerConfigGroup>
           ) : null}
+
+          {layer.type === LAYER_TYPES.arc && layer.visConfigSettings.fanOverlappingArcs ? (
+            <LayerConfigGroup
+              {...layer.visConfigSettings.fanOverlappingArcs}
+              {...visConfiguratorProps}
+              collapsible
+            >
+              <VisConfigSlider
+                {...layer.visConfigSettings.tiltMax}
+                {...visConfiguratorProps}
+                disabled={!layer.config.visConfig.fanOverlappingArcs}
+              />
+            </LayerConfigGroup>
+          ) : null}
         </StyledLayerVisualConfigurator>
       );
     }

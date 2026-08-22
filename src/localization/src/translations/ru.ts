@@ -184,6 +184,10 @@ export default {
     coverageRange: 'Диапазон покрытия',
     highPrecisionRendering: 'Высокая точность рендеринга',
     highPrecisionRenderingDescription: 'Высокая точность приведет к снижению производительности',
+    fanOverlappingArcs: 'Развести совпадающие дуги',
+    fanOverlappingArcsDescription:
+      'Отклонять дуги с одинаковыми началом и концом в сторону, чтобы они не накладывались',
+    tiltMax: 'Макс. наклон (градусы)',
     height: 'Высота',
     heightDescription: 'Нажмите кнопку в правом верхнем углу карты, чтобы переключиться в 3D-вид',
     fill: 'Наполнить',

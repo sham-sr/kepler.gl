@@ -144,6 +144,7 @@ export * from './mapbox-utils';
 export * from './h3-hexagon-layer';
 export {default as Table} from './table';
 
+export {computeArcFanTilts} from './arc-layer/arc-fan';
 export {getEditorLayer} from './editor-layer/editor-layer';
 
 export {

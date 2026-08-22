@@ -184,6 +184,10 @@ export default {
     coverageRange: '覆盖范围',
     highPrecisionRendering: '高精度渲染',
     highPrecisionRenderingDescription: '高精度渲染会导致性能下降',
+    fanOverlappingArcs: 'Fan overlapping arcs',
+    fanOverlappingArcsDescription:
+      'Tilt duplicate origin-destination arcs sideways so they do not stack',
+    tiltMax: 'Max tilt (degrees)',
     height: '高度',
     heightDescription: '点击屏幕右上角的按钮切换到3D视图',
     fill: '填充',

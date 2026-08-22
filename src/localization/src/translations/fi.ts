@@ -184,6 +184,10 @@ export default {
     coverageRange: 'Peittävyyden rajat',
     highPrecisionRendering: 'Tarkka renderöinti',
     highPrecisionRenderingDescription: 'Tarkka renderöinti johtaa hitaampaan suorittamiseen',
+    fanOverlappingArcs: 'Fan overlapping arcs',
+    fanOverlappingArcsDescription:
+      'Tilt duplicate origin-destination arcs sideways so they do not stack',
+    tiltMax: 'Max tilt (degrees)',
     height: 'Korkeus',
     heightDescription: 'Klikkaa oikeasta ylänurkasta nappia vaihtaaksesi 3D-näkymään',
     fill: 'Täyttö',

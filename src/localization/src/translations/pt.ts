@@ -184,6 +184,10 @@ export default {
     coverageRange: 'Alcance de cobertura',
     highPrecisionRendering: 'Renderização de Alta Precisão',
     highPrecisionRenderingDescription: 'Alta precisão irá em resultar em baixa performance',
+    fanOverlappingArcs: 'Fan overlapping arcs',
+    fanOverlappingArcsDescription:
+      'Tilt duplicate origin-destination arcs sideways so they do not stack',
+    tiltMax: 'Max tilt (degrees)',
     height: 'Altura',
     heightDescription: 'Clique no botão no canto superior direito para trocar para a visualização 3d',
     fill: 'Preenchimento',

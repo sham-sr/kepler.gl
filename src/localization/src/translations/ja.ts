@@ -183,6 +183,10 @@ export default {
     coverageRange: 'カバー率の範囲',
     highPrecisionRendering: '高精度レンダリング',
     highPrecisionRenderingDescription: '高精度にすると速度は低下します',
+    fanOverlappingArcs: 'Fan overlapping arcs',
+    fanOverlappingArcsDescription:
+      'Tilt duplicate origin-destination arcs sideways so they do not stack',
+    tiltMax: 'Max tilt (degrees)',
     height: '高さ',
     heightDescription: '3Dビューに切り替えるには画面右上のボタンをクリックします',
     fill: '塗りつぶし',
